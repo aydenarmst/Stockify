@@ -1,5 +1,15 @@
 import React, { Component } from "react";
 import { createRoot } from "react-dom/client";
+import Home from "./Home";
+import AddETFPage from "./AddETFPage";
+import {
+    BrowserRouter as Router, 
+    Switch, 
+    Route, 
+    Link, 
+    Redirect,
+    Routes
+} from "react-router-dom";
 
 
 export default class App extends Component {
@@ -8,10 +18,17 @@ export default class App extends Component {
     }
 
     render() {
-        return <h1> {this.props.name}</h1>;
+        return(
+        <Router>
+            <Routes>
+                <Route exact path = '/' element = {<Home/>}/>
+                <Route path = "/addETF" element = {<AddETFPage/>}/>
+            </Routes>
+        </Router>
+        );
     }
 }
 
 const appDiv = document.getElementById("app");
 const root = createRoot(appDiv);
-root.render(<App name = "ayden"/>)
+root.render(<App/>);

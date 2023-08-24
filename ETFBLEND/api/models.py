@@ -9,8 +9,9 @@ def generate_unique_code():
         if ETFInformation.objects.filter(LEI=code).count() == 0:
             break
 
-# Create your models here.
+# ETF information
 class ETFInformation(models.Model):
+    host = models.CharField(max_length=50, unique=True)
     ticker = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=100)
     AUM = models.FloatField()
@@ -18,3 +19,11 @@ class ETFInformation(models.Model):
     inception_date = models.DateField()
     LEI = models.CharField(max_length=20, unique=True, primary_key=True, default=generate_unique_code)
 
+
+# ETF holdings
+class ETFHoldings(models.Model):
+    etf = models.ForeignKey(ETFInformation, on_delete=models.CASCADE)
+    ticker = models.CharField(max_length=10)
+    name = models.CharField(max_length=100)
+    weight = models.FloatField()
+    shares = models.FloatField()
