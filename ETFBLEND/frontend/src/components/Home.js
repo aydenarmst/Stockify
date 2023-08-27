@@ -1,21 +1,29 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Box, Grid, Typography, Button } from "@mui/material";
 import DropdownComponent from "./DropDown";
 
 const containsText = (text, searchText) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const allOptions = [
-  "Invesco QQQ Trust(QQQ)",
-  "SPDR S&P 500 ETF Trust(SPY)",
-  "Vanguard Information Technology ETF(VGT)",
-  "iShares U.S Technology ETF(IYW)"
-];
+
 
 export default function Home() {
 
+    const [etfNameList, setEtfNameList] = useState([]);
+    
+    useEffect(() => {
+        fetch("api/etfList")
+            .then((response) => response.json())
+            .then((data) => {
+                setEtfNameList(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching ETF list: ", error);
+            });
+    }, []);
+
     const [selectedOptions, setSelectedOptions] = useState([
-        allOptions[0],
+        etfNameList[0],
         "",
         "",
         "",
@@ -24,7 +32,7 @@ export default function Home() {
 
     const [searchText, setSearchText] = useState("");
 
-    const filteredOptions = allOptions.filter((option) =>
+    const filteredOptions = etfNameList.filter((option) =>
         !selectedOptions.includes(option)
     );
 
@@ -86,6 +94,7 @@ export default function Home() {
                     <Button color="secondary" onClick={() => handleOptionChange(index, "")}>
                         Clear
                     </Button>
+
                     </Grid>
                 ))}
                 </Grid>

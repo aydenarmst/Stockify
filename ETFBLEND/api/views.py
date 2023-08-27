@@ -5,6 +5,8 @@ from .models import ETFInformation, ETFHoldings, Blend
 from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse
+from .utils import parse_csv_data
 
 # Create your views here.
 
@@ -73,3 +75,8 @@ class CreateETFView(APIView):
                 etf.save()
                 
                 return Response(ETFInformationSerializer(etf).data, status=status.HTTP_201_CREATED)
+            
+class ETFTickerList(APIView):
+    csv_data = parse_csv_data('data/ishares-etf-index.csv')
+    def get(self, request, format=None):
+        return Response(self.csv_data, status=status.HTTP_200_OK)
