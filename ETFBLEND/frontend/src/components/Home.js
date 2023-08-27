@@ -5,11 +5,10 @@ import DropdownComponent from "./DropDown";
 const containsText = (text, searchText) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-
-
 export default function Home() {
 
     const [etfNameList, setEtfNameList] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState(["","","","",""]);
     
     useEffect(() => {
         fetch("api/etfList")
@@ -22,24 +21,19 @@ export default function Home() {
             });
     }, []);
 
-    const [selectedOptions, setSelectedOptions] = useState([
-        etfNameList[0],
-        "",
-        "",
-        "",
-        ""
-    ]);
-
     const [searchText, setSearchText] = useState("");
 
-    const filteredOptions = etfNameList.filter((option) =>
-        !selectedOptions.includes(option)
+    const allOptions = useMemo(
+        () => etfNameList.filter((option) => containsText(option, searchText)),
+        [searchText, etfNameList]
     );
 
-    const displayedOptions = useMemo(
-        () => filteredOptions.filter((option) => containsText(option, searchText)),
-        [searchText, filteredOptions]
+    const filteredOptions = useMemo(
+        () => allOptions.filter((option) => !selectedOptions.includes(option)),
+        [allOptions, selectedOptions]
     );
+    
+
 
     const handleOptionChange = (index, value) => {
         const newSelectedOptions = [...selectedOptions];
@@ -71,9 +65,6 @@ export default function Home() {
             });
     };
     
-    
-    
-
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} align="center">
@@ -88,7 +79,7 @@ export default function Home() {
                         selectedOption={selectedOption}
                         index={index}
                         handleOptionChange={handleOptionChange}
-                        displayedOptions={displayedOptions}
+                        displayedOptions={filteredOptions}
                         setSearchText={setSearchText}
                     />
                     <Button color="secondary" onClick={() => handleOptionChange(index, "")}>

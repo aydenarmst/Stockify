@@ -39,9 +39,6 @@ class BlendView(generics.ListAPIView):
             blend = Blend(ETFTickers=', '.join(ETFTickers), host=host)  # Combine ETF names into a single string
             blend.save()
             return Response(BlendSerializer(blend).data, status=status.HTTP_201_CREATED)
-        
-
-
 
 
 class CreateETFView(APIView):

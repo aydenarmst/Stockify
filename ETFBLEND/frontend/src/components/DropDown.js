@@ -15,14 +15,8 @@ const DropdownComponent = ({
   index,
   handleOptionChange,
   displayedOptions,
-  setSearchText,
+  setSearchText
 }) => {
-
-  const handleClearSelection = () => {
-    handleOptionChange(index, "");
-    setSearchText("");
-  };
-  
   return (
     <FormControl fullWidth>
       <InputLabel id={`search-select-label-${index}`}>Option {index + 1}</InputLabel>
@@ -57,7 +51,6 @@ const DropdownComponent = ({
             }}
           />
         </ListSubheader>
-        {/* <MenuItem onClick={handleClearSelection}>Clear</MenuItem> */}
         {displayedOptions.map((option, i) => (
           <MenuItem key={i} value={option}>
             {option}
