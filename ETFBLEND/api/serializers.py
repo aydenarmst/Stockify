@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ETFInformation
+from .models import ETFInformation, Blend
 
 
 # ETF information
@@ -13,14 +13,17 @@ class CreateETFSerializer(serializers.ModelSerializer):
         model = ETFInformation
         fields = ('ticker', 'name', 'AUM', 'expense_ratio', 'inception_date', 'LEI')
 
-
-# ETF holdings
+# Holdings
 class ETFHoldingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ETFInformation
-        fields = ('etf', 'ticker', 'name', 'weight', 'shares')
+        fields = ('ticker', 'name', 'AUM', 'expense_ratio', 'inception_date', 'LEI')
+    
 
-class CreateETFHoldingsSerializer(serializers.ModelSerializer):
+
+# Blend
+class BlendSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ETFInformation
-        fields = ('etf', 'ticker', 'name', 'weight', 'shares')
+        model = Blend
+        fields = ('ETFTickers','code', 'host', 'created_at')
+

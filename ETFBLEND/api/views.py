@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
-from .models import ETFInformation, ETFHoldings
-from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, CreateETFHoldingsSerializer
+from .models import ETFInformation, ETFHoldings, Blend
+from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -15,6 +15,32 @@ class ETFInformationView(generics.ListAPIView):
 class ETFHoldingsView(generics.ListAPIView):
     queryset = ETFHoldings.objects.all()
     serializer_class = ETFHoldingsSerializer
+
+class BlendView(generics.ListAPIView):
+    queryset = Blend.objects.all()
+    serializer_class = BlendSerializer
+    
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        ETFTickers = request.data.get('ETFTickers', [])  # Get the list of ETF names from the request
+        host = self.request.session.session_key
+
+        queryset = Blend.objects.filter(host=host)
+        if queryset.exists():
+            create = queryset[0]
+            create.ETFTickers = ', '.join(ETFTickers)  # Combine ETF names into a single string
+            create.save(update_fields=['ETFTickers'])
+            return Response(BlendSerializer(create).data, status=status.HTTP_201_CREATED)
+        else:
+            blend = Blend(ETFTickers=', '.join(ETFTickers), host=host)  # Combine ETF names into a single string
+            blend.save()
+            return Response(BlendSerializer(blend).data, status=status.HTTP_201_CREATED)
+        
+
+
+
 
 class CreateETFView(APIView):
     serializer_class = CreateETFSerializer

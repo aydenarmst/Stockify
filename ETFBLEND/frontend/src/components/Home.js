@@ -41,8 +41,30 @@ export default function Home() {
 
     const handleBlendClick = () => {
         const filteredOptions = selectedOptions.filter((option) => option !== "");
-        console.log(filteredOptions);
+        
+        // Extract the ticker from each option
+        const ETFTickers = filteredOptions.map((option) => {
+            const matches = option.match(/\((.*?)\)/);
+            return matches ? matches[1] : '';
+        });
+        
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ETFTickers: ETFTickers  // Use 'ticker' as the key
+            })
+        };
+    
+        fetch("/api/blend", requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            });
     };
+    
+    
+    
 
     return (
         <Grid container spacing={1}>
@@ -61,6 +83,9 @@ export default function Home() {
                         displayedOptions={displayedOptions}
                         setSearchText={setSearchText}
                     />
+                    <Button color="secondary" onClick={() => handleOptionChange(index, "")}>
+                        Clear
+                    </Button>
                     </Grid>
                 ))}
                 </Grid>

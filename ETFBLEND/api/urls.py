@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import ETFInformationView, CreateETFView
+from .views import ETFInformationView, CreateETFView, BlendView
 
 
 urlpatterns = [
     path('home', ETFInformationView.as_view()),
     path('addETF', CreateETFView.as_view()),
+    path('blend', BlendView.as_view()),
 ]
