@@ -12,21 +12,30 @@ def generate_unique_code():
 
 # ETF information
 class ETFInformation(models.Model):
-    host = models.CharField(max_length=50, unique=True)
     ticker = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=100)
-    AUM = models.FloatField()
-    expense_ratio = models.FloatField()
-    inception_date = models.DateField()
-    LEI = models.CharField(max_length=20, unique=True, primary_key=True, default=generate_unique_code)
+    url = models.CharField(max_length=150)
 
 # ETF holdings
-class ETFHoldings(models.Model):
+class ETFHolding(models.Model):
     etf = models.ForeignKey(ETFInformation, on_delete=models.CASCADE)
     ticker = models.CharField(max_length=10)
     name = models.CharField(max_length=100)
+    sector = models.CharField(max_length=100)
+    asset_class = models.CharField(max_length=100)
+    market_value = models.FloatField()
     weight = models.FloatField()
+    notional_value = models.FloatField()
     shares = models.FloatField()
+    cusip = models.CharField(max_length=10)
+    isin = models.CharField(max_length=10)
+    sedol = models.CharField(max_length=10)
+    price = models.FloatField()
+    location = models.CharField(max_length=100)
+    exchange = models.CharField(max_length=100)
+    currency = models.CharField(max_length=100)
+    fx_rate = models.FloatField()
+    maturity = models.DateField()
 
 # Blend
 class Blend(models.Model):

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
-from .models import ETFInformation, ETFHoldings, Blend
+from .models import ETFInformation, ETFHolding, Blend
 from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,7 +15,7 @@ class ETFInformationView(generics.ListAPIView):
     serializer_class = ETFInformationSerializer
 
 class ETFHoldingsView(generics.ListAPIView):
-    queryset = ETFHoldings.objects.all()
+    queryset = ETFHolding.objects.all()
     serializer_class = ETFHoldingsSerializer
 
 class BlendView(generics.ListAPIView):
