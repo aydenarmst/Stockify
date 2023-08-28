@@ -6,6 +6,7 @@ import os
 import requests
 from .models import ETFInformation, ETFHolding
 from .utils import read_etf_data_from_csv
+import time
 
 def get_trading_day_month_ends(exchange_code, start_date, end_date, output_format):
     nyse = mcal.get_calendar(exchange_code)
@@ -46,12 +47,12 @@ def format_response(response_json):
     for input_item in input_items:
         mapped_item = map_raw_item(input_item)
         output_items.append(mapped_item)
-    return output_items
+    return (output_items)
 
 # api/web_scraper.py
 def download_and_save_etf_holdings():
-    etf_data = read_etf_data_from_csv('data/ishares-etf-index.csv') 
-    start_date = '2019-12-31'
+    etf_data = read_etf_data_from_csv('api/ishares-etf-index.csv') 
+    start_date = '2023-1-01'
     end_date = datetime.now().strftime('%Y-%m-%d')
 
     for etf in etf_data:
@@ -63,7 +64,7 @@ def download_and_save_etf_holdings():
 
         yyyymmdd_queue = get_trading_day_month_ends('NYSE', start_date, end_date, '%Y%m%d')
         for yyyymmdd in yyyymmdd_queue:
-            request_url = f'{etf_information.url}/1467271812596.ajax?' \
+            request_url = f'https://www.ishares.com{etf_information.url}/1467271812596.ajax?' \
                       f'fileType=json&tab=all&asOfDate={yyyymmdd}'
             print(f'requesting: {request_url}')
 
@@ -111,4 +112,6 @@ def download_and_save_etf_holdings():
                         f'status code = {response.status_code}\n'
                         f'response_message = {response.text}\n'
                         f'{"!" * 10}')
+
+                time.sleep(30)  # Sleep for 1 second to avoid getting blocked by the server
 
