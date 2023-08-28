@@ -27,9 +27,3 @@ class BlendSerializer(serializers.ModelSerializer):
         model = Blend
         fields = ('ETFTickers','code', 'host', 'created_at')
 
-# ETF Name serializer for the dropdown menu
-class ETFNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ETFInformation
-        fields = ('name', 'ticker')
-
