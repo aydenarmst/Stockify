@@ -42,26 +42,24 @@ const ETFSearchForm = () => {
 
   const handleBlendClick = () => {
     const filteredOptions = selectedOptions.filter((option) => option !== "");
-
+  
     const ETFTickers = filteredOptions.map((option) => {
       const matches = option.match(/\((.*?)\)/);
       return matches ? matches[1] : "";
     });
-
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ETFTickers: ETFTickers,
-      }),
-    };
-
-    fetch("/api/blend", requestOptions)
+  
+    // Construct the URL with separate query parameters for each ticker
+    const queryParameters = ETFTickers.map((ticker) => `etf_tickers=${ticker}`).join('&');
+    const url = `/api/etf-holdings/?${queryParameters}`;
+  
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
       });
   };
+  
+  
 
   return (
     <Grid container spacing={2}>

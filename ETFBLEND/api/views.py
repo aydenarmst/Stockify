@@ -10,39 +10,46 @@ from .utils import parse_csv_data
 
 # Create your views here.
 
+
 class ETFInformationView(generics.ListAPIView):
     queryset = ETFInformation.objects.all()
     serializer_class = ETFInformationSerializer
+
 
 class ETFHoldingsView(generics.ListAPIView):
     queryset = ETFHolding.objects.all()
     serializer_class = ETFHoldingsSerializer
 
+
 class BlendView(generics.ListAPIView):
     queryset = Blend.objects.all()
     serializer_class = BlendSerializer
-    
+
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
 
-        ETFTickers = request.data.get('ETFTickers', [])  # Get the list of ETF names from the request
+        # Get the list of ETF names from the request
+        ETFTickers = request.data.get('ETFTickers', [])
         host = self.request.session.session_key
 
         queryset = Blend.objects.filter(host=host)
         if queryset.exists():
             create = queryset[0]
-            create.ETFTickers = ', '.join(ETFTickers)  # Combine ETF names into a single string
+            # Combine ETF names into a single string
+            create.ETFTickers = ', '.join(ETFTickers)
             create.save(update_fields=['ETFTickers'])
             return Response(BlendSerializer(create).data, status=status.HTTP_201_CREATED)
         else:
-            blend = Blend(ETFTickers=', '.join(ETFTickers), host=host)  # Combine ETF names into a single string
+            # Combine ETF names into a single string
+            blend = Blend(ETFTickers=', '.join(ETFTickers), host=host)
             blend.save()
             return Response(BlendSerializer(blend).data, status=status.HTTP_201_CREATED)
 
 
 class CreateETFView(APIView):
     serializer_class = CreateETFSerializer
+
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
@@ -66,14 +73,30 @@ class CreateETFView(APIView):
                 create.expense_ratio = expense_ratio
                 create.inception_date = inception_date
                 create.LEI = lei
-                create.save(update_fields=['ticker', 'name', 'AUM', 'expense_ratio', 'inception_date', 'LEI'])
+                create.save(update_fields=[
+                            'ticker', 'name', 'AUM', 'expense_ratio', 'inception_date', 'LEI'])
             else:
-                etf = ETFInformation(ticker=ticker, name=name, AUM=aum, expense_ratio=expense_ratio, inception_date=inception_date, LEI=lei, host=host)
+                etf = ETFInformation(ticker=ticker, name=name, AUM=aum, expense_ratio=expense_ratio,
+                                     inception_date=inception_date, LEI=lei, host=host)
                 etf.save()
-                
+
                 return Response(ETFInformationSerializer(etf).data, status=status.HTTP_201_CREATED)
-            
+
+
 class ETFTickerList(APIView):
-    csv_data = parse_csv_data('api/ishares-etf-index.csv')
+    csv_data = parse_csv_data('data/ishares-etf-index.csv')
+
     def get(self, request, format=None):
         return Response(self.csv_data, status=status.HTTP_200_OK)
+
+
+class ETFHoldingsView(generics.ListAPIView):
+    serializer_class = ETFHoldingsSerializer
+
+    def get_queryset(self):
+        etf_tickers = self.request.GET.getlist('etf_tickers', [])
+        print(etf_tickers)
+
+        queryset = ETFHolding.objects.filter(etf__ticker__in=etf_tickers)
+        print(queryset.query)
+        return queryset
