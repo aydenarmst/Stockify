@@ -97,6 +97,7 @@ class ETFHoldingsView(generics.ListAPIView):
         etf_tickers = self.request.GET.getlist('etf_tickers', [])
         print(etf_tickers)
 
-        queryset = ETFHolding.objects.filter(etf__ticker__in=etf_tickers)
-        print(queryset.query)
+        queryset = ETFHolding.get_overlapping_holdings(etf_tickers)
+
+        print(queryset)
         return queryset

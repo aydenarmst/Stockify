@@ -1,6 +1,9 @@
 from django.db import models
 import string
 import random
+from django.db.models import Count
+from django.db.models import Q
+from django.db.models import Min
 
 
 def generate_unique_code():
@@ -10,8 +13,9 @@ def generate_unique_code():
         if Blend.objects.filter(code=code).count() == 0:
             break
     return code
-
 # ETF information
+
+
 class ETFInformation(models.Model):
     ticker = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=100)
@@ -19,6 +23,8 @@ class ETFInformation(models.Model):
     expense_ratio = models.FloatField(max_length=5)
 
 # ETF holdings
+
+
 class ETFHolding(models.Model):
     etf = models.ForeignKey(ETFInformation, on_delete=models.CASCADE)
     ticker = models.CharField(max_length=20)
@@ -39,7 +45,28 @@ class ETFHolding(models.Model):
     fx_rate = models.CharField(max_length=100)
     maturity = models.CharField(max_length=100)
 
+    @staticmethod
+    def get_overlapping_holdings(ETFInformationTickers):
+        ETF_list = ETFInformation.objects.filter(
+            ticker__in=ETFInformationTickers)
+
+        # Find duplicate tickers in the ETFs from the ETF_list
+        duplicate_tickers = ETFHolding.objects.filter(etf__in=ETF_list) \
+            .values('ticker') \
+            .annotate(etf_count=Count('etf', distinct=True)) \
+            .filter(etf_count=len(ETF_list)) \
+            .values_list('ticker', flat=True)
+
+        # Filter the ETFHolding objects based on duplicate tickers
+        overlapping_holdings = ETFHolding.objects.filter(
+            ticker__in=duplicate_tickers, etf__in=ETF_list)
+
+        return overlapping_holdings
+
+
 # Blend
+
+
 class Blend(models.Model):
     code = models.CharField(max_length=10, unique=True,
                             primary_key=True, default=generate_unique_code)
