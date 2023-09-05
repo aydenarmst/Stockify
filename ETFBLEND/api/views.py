@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
-from .models import ETFInformation, ETFHolding, Blend
-from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendSerializer
+from .models import ETFInformation, ETFHolding
+from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, ETFBlendedHoldingsSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -19,32 +19,6 @@ class ETFInformationView(generics.ListAPIView):
 class ETFHoldingsView(generics.ListAPIView):
     queryset = ETFHolding.objects.all()
     serializer_class = ETFHoldingsSerializer
-
-
-class BlendView(generics.ListAPIView):
-    queryset = Blend.objects.all()
-    serializer_class = BlendSerializer
-
-    def post(self, request, format=None):
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
-
-        # Get the list of ETF names from the request
-        ETFTickers = request.data.get('ETFTickers', [])
-        host = self.request.session.session_key
-
-        queryset = Blend.objects.filter(host=host)
-        if queryset.exists():
-            create = queryset[0]
-            # Combine ETF names into a single string
-            create.ETFTickers = ', '.join(ETFTickers)
-            create.save(update_fields=['ETFTickers'])
-            return Response(BlendSerializer(create).data, status=status.HTTP_201_CREATED)
-        else:
-            # Combine ETF names into a single string
-            blend = Blend(ETFTickers=', '.join(ETFTickers), host=host)
-            blend.save()
-            return Response(BlendSerializer(blend).data, status=status.HTTP_201_CREATED)
 
 
 class CreateETFView(APIView):
@@ -91,13 +65,14 @@ class ETFTickerList(APIView):
 
 
 class ETFHoldingsView(generics.ListAPIView):
-    serializer_class = ETFHoldingsSerializer
+    serializer_class = ETFBlendedHoldingsSerializer
 
-    def get_queryset(self):
+    def get(self, request, format=None):
         etf_tickers = self.request.GET.getlist('etf_tickers', [])
-        print(etf_tickers)
 
+        # Get the queryset without IDs
         queryset = ETFHolding.get_overlapping_holdings(etf_tickers)
 
-        print(queryset)
-        return queryset
+        serializer = self.serializer_class(queryset, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

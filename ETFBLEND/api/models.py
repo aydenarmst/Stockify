@@ -1,16 +1,12 @@
 from django.db import models
 import string
 import random
-from django.db.models import Count
+from django.db.models import Count, Sum
 from collections import defaultdict
+from django.db.models import Sum, F
+from decimal import Decimal
 
-def generate_unique_code():
-    length = 6
-    while True:
-        code = ''.join(random.choices(string.ascii_uppercase, k=length))
-        if Blend.objects.filter(code=code).count() == 0:
-            break
-    return code
+
 # ETF information
 
 
@@ -43,8 +39,6 @@ class ETFHolding(models.Model):
     fx_rate = models.CharField(max_length=100)
     maturity = models.CharField(max_length=100)
 
-    from django.db.models import Count
-
     @staticmethod
     def get_overlapping_holdings(ETFInformationTickers):
         ETF_list = ETFInformation.objects.filter(
@@ -62,30 +56,45 @@ class ETFHolding(models.Model):
         original_holdings = ETFHolding.objects.filter(
             ticker__in=duplicate_tickers, etf__in=ETF_list)
 
+        # Create a dictionary to store 'price' for each 'ticker'
+        ticker_prices = dict()
+        for holding in original_holdings:
+            ticker_prices[holding.ticker] = holding.price
+
         # Annotate the count of common ETFs for each holding
         overlapping_holdings = original_holdings \
-            .annotate(common_etf_count=Count('etf', distinct=True)) \
-            .order_by('-common_etf_count')  # Sort in descending order of common ETF count
-            
-        # Print the holdings with the most common ETFs
-        ticker_common_count = defaultdict(int)
+            .values('ticker', 'name', 'sector', 'asset_class') \
+            .annotate(total_weight=Sum(F('weight'))) \
+            .order_by('-total_weight')  # Sort in descending order of total weight
+
+        # Calculate the total weight of all overlapping holdings
+        total_weight = sum(Decimal(holding['total_weight'])
+                           for holding in overlapping_holdings)
+
+        print(total_weight)
+
+        # Normalize the weights to sum up to 100% and include 'price'
+        normalized_holdings = []
         for holding in overlapping_holdings:
-            ticker_common_count[holding.ticker] += holding.common_etf_count
+            weight = round(
+                Decimal(holding['total_weight']) / total_weight * 100, 3)
+            price = ticker_prices.get(holding['ticker'], None)
+            if price is not None:
+                price = round(Decimal(price), 2)  # Round price to 2 decimal places
+            normalized_holdings.append({
+                'ticker': holding['ticker'],
+                'name': holding['name'],
+                'sector': holding['sector'],
+                'asset_class': holding['asset_class'],
+                'weight': weight,
+                'price': price
+            })
 
-        for ticker, common_count in ticker_common_count.items():
-            print(f"{ticker}: {common_count}")
-            
-        return overlapping_holdings
 
+        top_20 = normalized_holdings[:20]
 
+        # Print the normalized holdings
+        for holding in normalized_holdings:
+            print(f"{holding['ticker']}: {holding['weight']}")
 
-
-# Blend
-
-
-class Blend(models.Model):
-    code = models.CharField(max_length=10, unique=True,
-                            primary_key=True, default=generate_unique_code)
-    host = models.CharField(max_length=50, unique=True)
-    ETFTickers = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
+        return top_20

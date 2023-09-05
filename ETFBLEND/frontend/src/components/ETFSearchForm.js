@@ -4,7 +4,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 
-const ETFSearchForm = () => {
+const ETFSearchForm = (props) => {
   const [etfNameList, setEtfNameList] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -55,8 +55,14 @@ const ETFSearchForm = () => {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-      });
+        props.handleApiResponse(data);
+        console.log(data)
+      })
+      .catch((error) => {
+        console.error("Error fetching ETF holdings: ", error);
+      }
+    );
+
   };
   
   
