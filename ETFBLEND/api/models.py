@@ -41,60 +41,59 @@ class ETFHolding(models.Model):
 
     @staticmethod
     def get_overlapping_holdings(ETFInformationTickers):
-        ETF_list = ETFInformation.objects.filter(
-            ticker__in=ETFInformationTickers)
+        ETF_list = ETFInformation.objects.filter(ticker__in=ETFInformationTickers)
+        
+        duplicate_tickers = ETFHolding._get_duplicate_tickers(ETF_list)
+        original_holdings = ETFHolding.objects.filter(ticker__in=duplicate_tickers, etf__in=ETF_list)
 
-        # Find duplicate tickers in the ETFs from the ETF_list
-        duplicate_tickers = ETFHolding.objects \
+        ticker_prices = {holding.ticker: holding.price for holding in original_holdings}
+        overlapping_holdings = ETFHolding._get_annotated_holdings(original_holdings)
+        
+        total_weight = sum(Decimal(holding['total_weight']) for holding in overlapping_holdings)
+        normalized_holdings = ETFHolding._normalize_holdings(overlapping_holdings, total_weight, ticker_prices)
+
+        return normalized_holdings[:20]
+
+    @staticmethod
+    def _get_duplicate_tickers(ETF_list):
+        return ETFHolding.objects \
             .filter(etf__in=ETF_list) \
             .values('ticker') \
             .annotate(etf_count=Count('etf', distinct=True)) \
             .filter(etf_count__gte=2) \
             .values_list('ticker', flat=True)
 
-        # Get the original holdings that match the duplicate tickers
-        original_holdings = ETFHolding.objects.filter(
-            ticker__in=duplicate_tickers, etf__in=ETF_list)
-
-        # Create a dictionary to store 'price' for each 'ticker'
-        ticker_prices = dict()
-        for holding in original_holdings:
-            ticker_prices[holding.ticker] = holding.price
-
-        # Annotate the count of common ETFs for each holding
-        overlapping_holdings = original_holdings \
+    @staticmethod
+    def _get_annotated_holdings(original_holdings):
+        return original_holdings \
             .values('ticker', 'name', 'sector', 'asset_class') \
             .annotate(total_weight=Sum(F('weight'))) \
-            .order_by('-total_weight')  # Sort in descending order of total weight
+            .order_by('-total_weight')
 
-        # Calculate the total weight of all overlapping holdings
-        total_weight = sum(Decimal(holding['total_weight'])
-                           for holding in overlapping_holdings)
+    from decimal import Decimal
 
-        print(total_weight)
-
-        # Normalize the weights to sum up to 100% and include 'price'
+    @staticmethod
+    def _normalize_holdings(overlapping_holdings, total_weight, ticker_prices):
+        # Compute the sum of the weights for the top 20 holdings
+        top_20_weight_sum = sum(Decimal(holding['total_weight']) for holding in overlapping_holdings[:20])
+        
         normalized_holdings = []
-        for holding in overlapping_holdings:
-            weight = round(
-                Decimal(holding['total_weight']) / total_weight * 100, 3)
+        for holding in overlapping_holdings[:20]:  # Limit to the top 20 holdings
+            # Normalize each weight based on the sum of the top 20
+            normalized_weight = round((Decimal(holding['total_weight']) / top_20_weight_sum) * 100, 3)
+            
             price = ticker_prices.get(holding['ticker'], None)
             if price is not None:
-                price = round(Decimal(price), 2)  # Round price to 2 decimal places
+                price = round(Decimal(price), 2)
+            
             normalized_holdings.append({
                 'ticker': holding['ticker'],
                 'name': holding['name'],
                 'sector': holding['sector'],
                 'asset_class': holding['asset_class'],
-                'weight': weight,
+                'weight': normalized_weight,
                 'price': price
             })
+            
+        return normalized_holdings
 
-
-        top_20 = normalized_holdings[:20]
-
-        # Print the normalized holdings
-        for holding in normalized_holdings:
-            print(f"{holding['ticker']}: {holding['weight']}")
-
-        return top_20

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ETFSearchForm from "./ETFSearchForm";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Paper, Container } from "@mui/material";
 import ETFDataGrid from "./ETFDataGrid";
 
 function Blend() {
@@ -11,25 +11,32 @@ function Blend() {
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} align="center">
-        <Typography variant="h4">Select ETFs</Typography>
-      </Grid>
+    <Container maxWidth="lg"> {/* Added a container to center the content */}
+      <Paper elevation={3} style={{ padding: '2rem', borderRadius: '1rem' }}> {/* Wrapped content in a Paper component for better visual separation */}
+        <Grid container spacing={4}>
+          <Grid item xs={12} align="center">
+            <Typography variant="h3" gutterBottom style={{ fontFamily: 'Outfit' }}> {/* Increased font size */}
+              Select ETFs
+            </Typography>
+          </Grid>
+        
+          <Grid item xs={12} align="center">
+            <ETFSearchForm handleApiResponse={handleApiResponse} />
+          </Grid>
 
-      <Grid item xs={12} align="center">
-        <Grid container justifyContent="center" spacing={2}>
-          <ETFSearchForm handleApiResponse={handleApiResponse} />
+          {responseData && (
+            <Grid item xs={12} align="center">
+              <Typography variant="h5" gutterBottom align="left" style={{ fontFamily: 'Outfit' }}> {/* Increased font size */}
+                ETF Holdings
+              </Typography>
+              <ETFDataGrid data={responseData} />
+            </Grid>
+          )}
         </Grid>
-      </Grid>
-      {responseData && (
-        <Grid item xs={12} align="center">
-          {/* Render the ETFDataGrid component with responseData */}
-          <Typography variant="h4">ETF Holdings</Typography>
-          <ETFDataGrid data={responseData} />
-        </Grid>
-      )}
-    </Grid>
+      </Paper>
+    </Container>
   );
 }
 
 export default Blend;
+
