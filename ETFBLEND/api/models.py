@@ -40,7 +40,7 @@ class ETFHolding(models.Model):
     maturity = models.CharField(max_length=100)
 
     @staticmethod
-    def get_overlapping_holdings(ETFInformationTickers):
+    def get_overlapping_holdings(ETFInformationTickers, number_of_holdings):
         ETF_list = ETFInformation.objects.filter(ticker__in=ETFInformationTickers)
 
         duplicate_tickers = ETFHolding._get_duplicate_tickers(ETF_list)
@@ -50,7 +50,7 @@ class ETFHolding(models.Model):
         overlapping_holdings = ETFHolding._get_annotated_holdings(original_holdings)
 
         total_weight = sum(Decimal(holding['total_weight']) for holding in overlapping_holdings)
-        normalized_holdings = ETFHolding._normalize_holdings(overlapping_holdings, total_weight, ticker_prices)
+        normalized_holdings = ETFHolding._normalize_holdings(overlapping_holdings, total_weight, ticker_prices, number_of_holdings)
 
         # Calculate sector exposure
         sector_exposure = ETFHolding.get_sector_exposure(normalized_holdings[:20])  # limit to top 20
@@ -90,17 +90,15 @@ class ETFHolding(models.Model):
             .annotate(total_weight=Sum(F('weight'))) \
             .order_by('-total_weight')
 
-    from decimal import Decimal
-
     @staticmethod
-    def _normalize_holdings(overlapping_holdings, total_weight, ticker_prices):
+    def _normalize_holdings(overlapping_holdings, total_weight, ticker_prices, number_of_holdings):
         # Compute the sum of the weights for the top 20 holdings
-        top_20_weight_sum = sum(Decimal(holding['total_weight']) for holding in overlapping_holdings[:20])
+        top_holdings_weight_sum = sum(Decimal(holding['total_weight']) for holding in overlapping_holdings[:number_of_holdings])
         
         normalized_holdings = []
-        for holding in overlapping_holdings[:20]:  # Limit to the top 20 holdings
+        for holding in overlapping_holdings[:number_of_holdings]:  # Limit to the top 20 holdings
             # Normalize each weight based on the sum of the top 20
-            normalized_weight = round((Decimal(holding['total_weight']) / top_20_weight_sum) * 100, 3)
+            normalized_weight = round((Decimal(holding['total_weight']) / top_holdings_weight_sum) * 100, 3)
             
             price = ticker_prices.get(holding['ticker'], None)
             if price is not None:

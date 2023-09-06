@@ -3,10 +3,13 @@ import { Grid, Typography, Button, TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
+import Slider from "@mui/material/Slider";
+import Tooltip from "@mui/material/Tooltip";
 
 const ETFSearchForm = (props) => {
   const [etfNameList, setEtfNameList] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [numHoldings, setNumHoldings] = useState(5);
 
   useEffect(() => {
     fetch("api/etfList")
@@ -40,32 +43,29 @@ const ETFSearchForm = (props) => {
     }
   };
 
+  const handleSliderChange = (event, newValue) => {
+    setNumHoldings(newValue);
+  };
+
   const handleBlendClick = () => {
-    const filteredOptions = selectedOptions.filter((option) => option !== "");
-  
-    const ETFTickers = filteredOptions.map((option) => {
-      const matches = option.match(/\((.*?)\)/);
-      return matches ? matches[1] : "";
-    });
-  
-    // Construct the URL with separate query parameters for each ticker
-    const queryParameters = ETFTickers.map((ticker) => `etf_tickers=${ticker}`).join('&');
-    const url = `/api/etf-holdings/?${queryParameters}`;
-  
-    fetch(url)
+    const ETFTickers = selectedOptions
+      .filter((option) => option)
+      .map((option) => option.match(/\((.*?)\)/)?.[1] ?? "")
+      .filter((ticker) => ticker);
+
+    const queryParameters = [
+      ...ETFTickers.map((ticker) => `etf_tickers=${ticker}`),
+      `number_of_holdings=${numHoldings}`,
+    ].join("&");
+
+    fetch(`/api/etf-holdings/?${queryParameters}`)
       .then((response) => response.json())
       .then((data) => {
         props.handleApiResponse(data);
-        console.log(data)
+        console.log(data);
       })
-      .catch((error) => {
-        console.error("Error fetching ETF holdings: ", error);
-      }
-    );
-
+      .catch((error) => console.error("Error fetching ETF holdings: ", error));
   };
-  
-  
 
   return (
     <Grid container spacing={2}>
@@ -98,6 +98,22 @@ const ETFSearchForm = (props) => {
             }}
           />
         </Grid>
+      </Grid>
+
+      <Grid item xs={12} align="center">
+        <Tooltip title="Select the number of top stocks you'd like to use to recreate the ETF(s)" placement="top">
+          <Typography gutterBottom style={{ cursor: "pointer" }}>
+            Max Number of Constituent Stocks
+          </Typography>
+        </Tooltip>
+        <Slider
+          value={numHoldings}
+          min={5}
+          max={50}
+          step={1}
+          valueLabelDisplay="auto"
+          onChange={handleSliderChange}
+        />
       </Grid>
 
       <Grid item xs={12} align="center">

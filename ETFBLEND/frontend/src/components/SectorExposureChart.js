@@ -20,7 +20,7 @@ const CustomTooltip = ({ active, payload }) => {
 
 const SectorExposureChart = ({ data }) => {
   return (
-    <PieChart width={500} height={300}>
+    <PieChart width={500} height={450}>
       <Pie
         data={data}
         dataKey="weight"

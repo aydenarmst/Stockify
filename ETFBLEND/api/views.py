@@ -67,12 +67,21 @@ class ETFTickerList(APIView):
 class ETFHoldingsView(generics.ListAPIView):
     def get(self, request, format=None):
         etf_tickers = self.request.GET.getlist('etf_tickers', [])
+        number_of_holdings = self.request.GET.get('number_of_holdings', None)
+
+        if number_of_holdings is not None:
+            try:
+                number_of_holdings = int(number_of_holdings)
+            except ValueError:
+                return Response({"error": "number_of_holdings must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
+            
 
         # Get the queryset and sector exposure
-        top_holdings, sector_exposure_dict = ETFHolding.get_overlapping_holdings(etf_tickers)
+        top_holdings, sector_exposure_dict = ETFHolding.get_overlapping_holdings(etf_tickers, number_of_holdings)
 
         # Transform sector exposure into a list of dictionaries suitable for serialization
-        sector_exposure_list = [{'sector': k, 'weight': v} for k, v in sector_exposure_dict.items()]
+        sector_exposure_list = [{'sector': k, 'weight': v}
+                                for k, v in sector_exposure_dict.items()]
 
         # Wrap the data in a dictionary
         summary_data = {
@@ -82,9 +91,8 @@ class ETFHoldingsView(generics.ListAPIView):
 
         # Serialize the data using BlendedETFSummarySerializer
         serializer = BlendedETFSummarySerializer(data=summary_data)
-        
+
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-

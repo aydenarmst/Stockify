@@ -17,7 +17,7 @@ function Blend() {
     <Container maxWidth="lg">
       <Paper elevation={3} style={{ padding: '2rem', borderRadius: '1rem', backgroundColor: '#f4f4f4', maxHeight: '90vh', overflowY: 'auto' }}>
         <Typography variant="h3" gutterBottom align="center" style={{ fontFamily: 'Outfit', color: '#333' }}>
-          Select ETFs
+          BLEND
         </Typography>
         <Divider style={{ marginBottom: '2rem' }} />
 
@@ -29,7 +29,7 @@ function Blend() {
           {holdingsData && (
             <Grid item xs={12} md={6}>
               <Typography variant="h5" gutterBottom align="left" style={{ fontFamily: 'Outfit', color: '#333' }}>
-                ETF Holdings
+                Recreated ETF Holdings
               </Typography>
               <ETFDataGrid data={holdingsData} />
             </Grid>

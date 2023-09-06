@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { createRoot } from "react-dom";
+import { createRoot } from "react-dom/client";
 import Home from "./Home";
 import AddETFPage from "./AddETFPage";
 import Blend from "./Blend";

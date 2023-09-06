@@ -3,17 +3,18 @@ import { DataGrid } from "@mui/x-data-grid";
 
 function ETFDataGrid({ data }) {
   const columns = [
-    { field: "ticker", headerName: "Ticker", flex: 1 },
-    { field: "name", headerName: "Name", flex: 1 },
+    { field: "ticker", headerName: "Ticker", width: 150 },
+    { field: "name", headerName: "Name", width: 250 },
+    { field: "sector", headerName: "Sector", width: 150},
     {
       field: "weight",
       headerName: "Weight",
-      flex: 1,
+      width: 150,
       renderCell: (params) => (
         <div
           style={{
-            width: "100%",
-            backgroundColor: "#f3f3f3",
+            width: 150,
+            backgroundColor: "#d9d9d9",
             position: "relative",
           }}
         >
@@ -34,7 +35,7 @@ function ETFDataGrid({ data }) {
     {
       field: "price",
       headerName: "Price",
-      flex: 1,
+      width: 150,
       renderCell: (params) => (
         <div>
           {`$${params.value}`} {/* Render the price */}
