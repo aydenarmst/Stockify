@@ -1,35 +1,46 @@
 import React, { useState } from "react";
 import ETFSearchForm from "./ETFSearchForm";
-import { Grid, Typography, Paper, Container } from "@mui/material";
+import { Grid, Typography, Paper, Container, Divider } from "@mui/material";
 import ETFDataGrid from "./ETFDataGrid";
+import SectorExposureChart from "./SectorExposureChart";
 
 function Blend() {
-  const [responseData, setResponseData] = useState(null);
+  const [holdingsData, setHoldingsData] = useState(null);
+  const [sectorData, setSectorData] = useState(null);
 
   const handleApiResponse = (data) => {
-    setResponseData(data);
+    setHoldingsData(data.top_holdings);
+    setSectorData(data.sector_exposure);
   };
 
   return (
-    <Container maxWidth="lg"> {/* Added a container to center the content */}
-      <Paper elevation={3} style={{ padding: '2rem', borderRadius: '1rem' }}> {/* Wrapped content in a Paper component for better visual separation */}
+    <Container maxWidth="lg">
+      <Paper elevation={3} style={{ padding: '2rem', borderRadius: '1rem', backgroundColor: '#f4f4f4', maxHeight: '90vh', overflowY: 'auto' }}>
+        <Typography variant="h3" gutterBottom align="center" style={{ fontFamily: 'Outfit', color: '#333' }}>
+          Select ETFs
+        </Typography>
+        <Divider style={{ marginBottom: '2rem' }} />
+
         <Grid container spacing={4}>
-          <Grid item xs={12} align="center">
-            <Typography variant="h3" gutterBottom style={{ fontFamily: 'Outfit' }}> {/* Increased font size */}
-              Select ETFs
-            </Typography>
-          </Grid>
-        
-          <Grid item xs={12} align="center">
+          <Grid item xs={12} md={6} align="center">
             <ETFSearchForm handleApiResponse={handleApiResponse} />
           </Grid>
 
-          {responseData && (
-            <Grid item xs={12} align="center">
-              <Typography variant="h5" gutterBottom align="left" style={{ fontFamily: 'Outfit' }}> {/* Increased font size */}
+          {holdingsData && (
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5" gutterBottom align="left" style={{ fontFamily: 'Outfit', color: '#333' }}>
                 ETF Holdings
               </Typography>
-              <ETFDataGrid data={responseData} />
+              <ETFDataGrid data={holdingsData} />
+            </Grid>
+          )}
+
+          {sectorData && (
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5" gutterBottom align="left" style={{ fontFamily: 'Outfit', color: '#333' }}>
+                Sector Exposure
+              </Typography>
+              <SectorExposureChart data={sectorData} />
             </Grid>
           )}
         </Grid>
@@ -39,4 +50,3 @@ function Blend() {
 }
 
 export default Blend;
-

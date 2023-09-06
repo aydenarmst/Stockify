@@ -42,18 +42,38 @@ class ETFHolding(models.Model):
     @staticmethod
     def get_overlapping_holdings(ETFInformationTickers):
         ETF_list = ETFInformation.objects.filter(ticker__in=ETFInformationTickers)
-        
+
         duplicate_tickers = ETFHolding._get_duplicate_tickers(ETF_list)
         original_holdings = ETFHolding.objects.filter(ticker__in=duplicate_tickers, etf__in=ETF_list)
 
         ticker_prices = {holding.ticker: holding.price for holding in original_holdings}
         overlapping_holdings = ETFHolding._get_annotated_holdings(original_holdings)
-        
+
         total_weight = sum(Decimal(holding['total_weight']) for holding in overlapping_holdings)
         normalized_holdings = ETFHolding._normalize_holdings(overlapping_holdings, total_weight, ticker_prices)
 
-        return normalized_holdings[:20]
+        # Calculate sector exposure
+        sector_exposure = ETFHolding.get_sector_exposure(normalized_holdings[:20])  # limit to top 20
 
+        return normalized_holdings, sector_exposure
+
+    
+    @staticmethod
+    def get_sector_exposure(normalized_holdings):
+        # Calculate sector exposure based on the normalized holdings
+        sector_exposure = defaultdict(Decimal)
+        for holding in normalized_holdings:
+            sector = holding.get('sector', 'Unknown')
+            weight = holding.get('weight', Decimal('0'))
+            sector_exposure[sector] += weight
+
+        # Normalize sector exposure based on the total weight in the holdings
+        total_weight = sum(sector_exposure.values())
+        for sector, weight in sector_exposure.items():
+            sector_exposure[sector] = round((weight / total_weight) * 100, 2)
+
+        return dict(sector_exposure)
+    
     @staticmethod
     def _get_duplicate_tickers(ETF_list):
         return ETFHolding.objects \
@@ -84,7 +104,7 @@ class ETFHolding(models.Model):
             
             price = ticker_prices.get(holding['ticker'], None)
             if price is not None:
-                price = round(Decimal(price), 2)
+                price = str(round(Decimal(price), 2))
             
             normalized_holdings.append({
                 'ticker': holding['ticker'],

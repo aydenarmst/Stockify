@@ -10,22 +10,37 @@ function ETFDataGrid({ data }) {
       headerName: "Weight",
       flex: 1,
       renderCell: (params) => (
-        <div style={{ width: "100%", backgroundColor: "#f3f3f3", position: "relative" }}>
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#f3f3f3",
+            position: "relative",
+          }}
+        >
           <div
             style={{
-              backgroundColor: "#3f51b5",  // You can choose any color
+              backgroundColor: "#3f51b5", // You can choose any color
               width: params.value,
               height: "100%",
               position: "absolute",
             }}
           ></div>
           <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-            {params.value}
+            {`${params.value}%`}
           </div>
         </div>
       ),
     },
-    { field: "price", headerName: "Price", flex: 1 },
+    {
+      field: "price",
+      headerName: "Price",
+      flex: 1,
+      renderCell: (params) => (
+        <div>
+          {`$${params.value}`} {/* Render the price */}
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -41,4 +56,3 @@ function ETFDataGrid({ data }) {
 }
 
 export default ETFDataGrid;
-

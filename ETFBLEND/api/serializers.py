@@ -24,14 +24,9 @@ class ETFHoldingsSerializer(serializers.ModelSerializer):
         fields = ('etf', 'ticker', 'name', 'sector', 'asset_class', 'market_value', 'weight', 'notional_value',
                   'shares', 'cusip', 'isin', 'sedol', 'price', 'location', 'exchange', 'currency', 'fx_rate', 'maturity')
 
-class ETFBlendedHoldingsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ETFHolding
-        fields = ('ticker', 'name', 'sector', 'asset_class', 'weight', 'price')
 
 
-
-
+# Serializer for individual blended holdings
 class ETFBlendedHoldingsSerializer(serializers.Serializer):
     ticker = serializers.CharField()
     name = serializers.CharField()
@@ -40,22 +35,14 @@ class ETFBlendedHoldingsSerializer(serializers.Serializer):
     weight = serializers.DecimalField(max_digits=10, decimal_places=3)  # Define the field as Decimal
     price = serializers.CharField()
 
-    
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data.update({'weight': f"{data['weight']}%"})
-        data.update({'price': f"${data['price']}"})
-        return data
+# Serializer for sector exposure
+class SectorExposureSerializer(serializers.Serializer):
+    sector = serializers.CharField()
+    weight = serializers.DecimalField(max_digits=10, decimal_places=2)
 
 
+# Parent serializer that includes both the blended holdings and the sector exposure
+class BlendedETFSummarySerializer(serializers.Serializer):
+    top_holdings = ETFBlendedHoldingsSerializer(many=True)
+    sector_exposure = SectorExposureSerializer(many=True)
 
-
-
-
-
-
-# # Blend
-# class BlendSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Blend
-#         fields = ('ETFTickers', 'code', 'host', 'created_at')

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
 from .models import ETFInformation, ETFHolding
-from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, ETFBlendedHoldingsSerializer
+from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -65,14 +65,26 @@ class ETFTickerList(APIView):
 
 
 class ETFHoldingsView(generics.ListAPIView):
-    serializer_class = ETFBlendedHoldingsSerializer
-
     def get(self, request, format=None):
         etf_tickers = self.request.GET.getlist('etf_tickers', [])
 
-        # Get the queryset without IDs
-        queryset = ETFHolding.get_overlapping_holdings(etf_tickers)
+        # Get the queryset and sector exposure
+        top_holdings, sector_exposure_dict = ETFHolding.get_overlapping_holdings(etf_tickers)
 
-        serializer = self.serializer_class(queryset, many=True)
+        # Transform sector exposure into a list of dictionaries suitable for serialization
+        sector_exposure_list = [{'sector': k, 'weight': v} for k, v in sector_exposure_dict.items()]
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Wrap the data in a dictionary
+        summary_data = {
+            'top_holdings': top_holdings,
+            'sector_exposure': sector_exposure_list
+        }
+
+        # Serialize the data using BlendedETFSummarySerializer
+        serializer = BlendedETFSummarySerializer(data=summary_data)
+        
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
