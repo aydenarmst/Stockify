@@ -1,3 +1,4 @@
+from .utils import parse_csv_data
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
@@ -6,7 +7,8 @@ from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldi
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
-from .utils import parse_csv_data
+from .business_logic.blend_logic import get_overlapping_holdings
+
 
 # Create your views here.
 
@@ -74,10 +76,10 @@ class ETFHoldingsView(generics.ListAPIView):
                 number_of_holdings = int(number_of_holdings)
             except ValueError:
                 return Response({"error": "number_of_holdings must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
-            
 
         # Get the queryset and sector exposure
-        top_holdings, sector_exposure_dict = ETFHolding.get_overlapping_holdings(etf_tickers, number_of_holdings)
+        top_holdings, sector_exposure_dict, expense_ratio = get_overlapping_holdings(
+            etf_tickers, number_of_holdings)
 
         # Transform sector exposure into a list of dictionaries suitable for serialization
         sector_exposure_list = [{'sector': k, 'weight': v}
@@ -86,8 +88,11 @@ class ETFHoldingsView(generics.ListAPIView):
         # Wrap the data in a dictionary
         summary_data = {
             'top_holdings': top_holdings,
-            'sector_exposure': sector_exposure_list
+            'sector_exposure': sector_exposure_list,
+            'expense_ratio': expense_ratio
         }
+
+        print(summary_data)
 
         # Serialize the data using BlendedETFSummarySerializer
         serializer = BlendedETFSummarySerializer(data=summary_data)

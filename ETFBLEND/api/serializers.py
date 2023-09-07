@@ -32,6 +32,7 @@ class ETFBlendedHoldingsSerializer(serializers.Serializer):
     name = serializers.CharField()
     sector = serializers.CharField()
     asset_class = serializers.CharField()
+    location = serializers.CharField()
     weight = serializers.DecimalField(max_digits=10, decimal_places=3)  # Define the field as Decimal
     price = serializers.CharField()
 
@@ -45,4 +46,5 @@ class SectorExposureSerializer(serializers.Serializer):
 class BlendedETFSummarySerializer(serializers.Serializer):
     top_holdings = ETFBlendedHoldingsSerializer(many=True)
     sector_exposure = SectorExposureSerializer(many=True)
+    expense_ratio = serializers.DecimalField(max_digits=10, decimal_places=3)
 

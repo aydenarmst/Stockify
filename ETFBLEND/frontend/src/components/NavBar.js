@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from "react-router-dom";
 
+
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -13,33 +14,36 @@ const NavBar = () => {
 
   return (
     <>
-      <AppBar position="sticky" style={{ backgroundColor: 'black'}}>
-        <Toolbar>
+      <AppBar position="sticky" style={{ backgroundColor: 'black' }}>
+        <Toolbar style={{ justifyContent: 'space-between' }}>
+          <Typography variant="h6" style={{ fontFamily: 'Montserrat, sans-serif' }}>Stockify</Typography>
           <IconButton
-            edge="start"
+            edge="end" // Use "end" to move the icon to the right
             color="inherit"
             aria-label="menu"
             onClick={toggleDrawer}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" style={{ fontFamily: 'Outfit'}}>ETFBlend</Typography>
         </Toolbar>
       </AppBar>
 
-      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
         <IconButton onClick={toggleDrawer}>
           <CloseIcon />
         </IconButton>
         <List>
-          <ListItem ButtonBase component={Link} to="/" onClick={toggleDrawer}>
+          <ListItem component={Link} to="/" onClick={toggleDrawer}>
             Home
           </ListItem>
-          <ListItem ButtonBase component={Link} to="/blend" onClick={toggleDrawer}>
+          <ListItem component={Link} to="/blend" onClick={toggleDrawer}>
             Blend
           </ListItem>
-          <ListItem ButtonBase component={Link} to="/addETF" onClick={toggleDrawer}>
-            Add ETF
+          <ListItem component={Link} to="/addETF" onClick={toggleDrawer}>
+            Adjust Sectors
+          </ListItem>
+          <ListItem component={Link} to="/addStock" onClick={toggleDrawer}>
+            Terms of service
           </ListItem>
         </List>
       </Drawer>

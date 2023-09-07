@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { createRoot } from "react-dom/client";
 import Home from "./Home";
 import AddETFPage from "./AddETFPage";
-import Blend from "./Blend";
+import Blend from "./Blend/Blend";
 import NavBar from "./NavBar";
 import {
   BrowserRouter as Router,

@@ -1,5 +1,5 @@
 import React from "react";
-import ETFSearchForm from "./ETFSearchForm";
+import ETFSearchForm from "./Blend/ETFSearchForm";
 import { Grid, Typography, Paper } from "@mui/material";
 
 function Blend() {
