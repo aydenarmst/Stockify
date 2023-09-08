@@ -6,7 +6,7 @@ This project leverages the power of Django and React to provide a tool for analy
 - **ETF Holdings Analysis:** Deep dive into the holdings of various ETFs and identify which securities they have in common.
 - **Blend Normalization:** Adjust the weightings of the holdings in a custom blend to see how the portfolio makeup changes.
 - **Data Updates:** The dataset is sourced from iShares, ensuring you're working with high-quality and up-to-date information.
-
+---
 ### Quick Start
 
 #### Prerequisites
