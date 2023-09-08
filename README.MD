@@ -1,7 +1,7 @@
 ### ETF Holdings Overlap Finder
 
 This project leverages the power of Django and React to provide a tool for analyzing the holdings of ETFs. It is specially designed to discover overlaps between multiple ETFs and offers a unique blend normalization feature.
-
+--- 
 ### Features
 - **ETF Holdings Analysis:** Deep dive into the holdings of various ETFs and identify which securities they have in common.
 - **Blend Normalization:** Adjust the weightings of the holdings in a custom blend to see how the portfolio makeup changes.
