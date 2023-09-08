@@ -36,7 +36,7 @@ function ETFDataGrid({ data }) {
         >
           <div
             style={{
-              backgroundColor: "#3f51b5", // You can choose any color
+              backgroundColor: "#003366",
               width: params.value,
               height: "100%",
               position: "absolute",
@@ -54,7 +54,17 @@ function ETFDataGrid({ data }) {
       width: 150,
       renderCell: (params) => (
         <div>
-          {`$${params.value}`} {/* Render the price */}
+          {`$${params.value}`}
+        </div>
+      ),
+    },
+    {
+      field: "etf_count",
+      headerName: "ETF Frequency",
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          {`${params.value}`}
         </div>
       ),
     },

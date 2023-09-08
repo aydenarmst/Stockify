@@ -9,7 +9,14 @@ def get_overlapping_holdings(ETFInformationTickers, number_of_holdings):
 
     expense_ratio = calculate_blended_expense_ratio(ETF_list)
 
-    duplicate_tickers = _get_duplicate_tickers(ETF_list)
+    duplicate_tickers_with_counts = _get_duplicate_tickers_with_counts(
+        ETF_list)
+
+    # Extract just the tickers and counts from the duplicate_tickers_with_counts for the filter.
+    duplicate_tickers = [item[0] for item in duplicate_tickers_with_counts]
+    ticker_to_etf_count = {item[0]: item[1]
+                           for item in duplicate_tickers_with_counts}
+
     original_holdings = ETFHolding.objects.filter(
         ticker__in=duplicate_tickers, etf__in=ETF_list)
 
@@ -20,7 +27,7 @@ def get_overlapping_holdings(ETFInformationTickers, number_of_holdings):
     total_weight = sum(Decimal(holding['total_weight'])
                        for holding in overlapping_holdings)
     normalized_holdings = _normalize_holdings(
-        overlapping_holdings, total_weight, ticker_prices, number_of_holdings)
+        overlapping_holdings, total_weight, ticker_prices, ticker_to_etf_count, number_of_holdings)
 
     sector_exposure = get_sector_exposure(
         normalized_holdings[:number_of_holdings])
@@ -44,13 +51,13 @@ def get_sector_exposure(normalized_holdings):
     return dict(sector_exposure)
 
 
-def _get_duplicate_tickers(ETF_list):
+def _get_duplicate_tickers_with_counts(ETF_list):
     return ETFHolding.objects \
         .filter(etf__in=ETF_list) \
         .values('ticker') \
         .annotate(etf_count=Count('etf', distinct=True)) \
         .filter(etf_count__gte=2) \
-        .values_list('ticker', flat=True)
+        .values_list('ticker', 'etf_count')
 
 
 def _get_annotated_holdings(original_holdings):
@@ -60,7 +67,7 @@ def _get_annotated_holdings(original_holdings):
         .order_by('-total_weight')
 
 
-def _normalize_holdings(overlapping_holdings, total_weight, ticker_prices, number_of_holdings):
+def _normalize_holdings(overlapping_holdings, total_weight, ticker_prices, ticker_to_etf_count, number_of_holdings):
     # Compute the sum of the weights for the top 20 holdings
     top_holdings_weight_sum = sum(Decimal(
         holding['total_weight']) for holding in overlapping_holdings[:number_of_holdings])
@@ -76,6 +83,9 @@ def _normalize_holdings(overlapping_holdings, total_weight, ticker_prices, numbe
         if price is not None:
             price = str(round(Decimal(price), 2))
 
+        # Fetch etf_count for this holding's ticker from ticker_to_etf_count
+        etf_count = ticker_to_etf_count.get(holding['ticker'], 0)
+
         normalized_holdings.append({
             'ticker': holding['ticker'],
             'name': holding['name'],
@@ -83,7 +93,8 @@ def _normalize_holdings(overlapping_holdings, total_weight, ticker_prices, numbe
             'asset_class': holding['asset_class'],
             'location': holding['location'],
             'weight': normalized_weight,
-            'price': price
+            'price': price,
+            'etf_count': etf_count,  # Added this line to append etf_count to the result
         })
 
     return normalized_holdings

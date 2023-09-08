@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
 
+import logo from "../../static/images/8.png";
+import { alignProperty } from "@mui/material/styles/cssUtils";
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -14,11 +24,21 @@ const NavBar = () => {
 
   return (
     <>
-      <AppBar position="sticky" style={{ backgroundColor: 'black' }}>
-        <Toolbar style={{ justifyContent: 'space-between' }}>
-          <Typography variant="h6" style={{ fontFamily: 'Montserrat, sans-serif' }}>Stockify</Typography>
+      <AppBar position="sticky" style={{ backgroundColor: "black" }}>
+        <Toolbar>
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "40px", height: "40px", marginRight: "10px" }}
+          />
+          <Typography
+            variant="h6"
+            style={{ fontFamily: "Montserrat, sans-serif", flexGrow: 1 }}
+          >
+            Stockify
+          </Typography>
           <IconButton
-            edge="end" // Use "end" to move the icon to the right
+            edge="end"
             color="inherit"
             aria-label="menu"
             onClick={toggleDrawer}

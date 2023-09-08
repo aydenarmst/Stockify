@@ -35,6 +35,7 @@ class ETFBlendedHoldingsSerializer(serializers.Serializer):
     location = serializers.CharField()
     weight = serializers.DecimalField(max_digits=10, decimal_places=3)  # Define the field as Decimal
     price = serializers.CharField()
+    etf_count = serializers.IntegerField()
 
 # Serializer for sector exposure
 class SectorExposureSerializer(serializers.Serializer):

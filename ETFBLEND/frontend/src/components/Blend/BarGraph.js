@@ -34,7 +34,7 @@ function BarGraph({ data }) {
           <XAxis dataKey="location" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="count" fill="#8884d8" />
+          <Bar dataKey="count" fill="#003366" />
         </BarChart>
       </ResponsiveContainer>
     </div>

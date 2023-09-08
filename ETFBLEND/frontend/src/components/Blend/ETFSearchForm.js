@@ -113,11 +113,19 @@ const ETFSearchForm = (props) => {
           step={1}
           valueLabelDisplay="auto"
           onChange={handleSliderChange}
+          sx={{
+            color: "#003366"
+          }}
         />
       </Grid>
 
       <Grid item xs={12} align="center">
-        <Button color="primary" variant="contained" onClick={handleBlendClick}>
+        <Button
+          variant="contained"
+          onClick={handleBlendClick}
+          style={{ backgroundColor: '#003366', color: '#FFFFFF' }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#002244'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#003366'}>
           Blend ETF's
         </Button>
       </Grid>
