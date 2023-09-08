@@ -23,12 +23,12 @@ Ensure you have `npm` and `Django` installed to run the frontend and backend res
 
 
 #### Starting the Django Backend
-python ./manage.py runserver
+``` python ./manage.py runserver ```
 
 ### Data Management
 #### Load New Data
 To update or add new ETF holdings data from iShares, simply run the management command:
-./manage.py download_etf_holdings
+``` python ./manage.py download_etf_holdings ```
 
 
 ### Documentation
