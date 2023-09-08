@@ -13,13 +13,13 @@ This project leverages the power of Django and React to provide a tool for analy
 Ensure you have `npm` and `Django` installed to run the frontend and backend respectively.
 
 ### Requirements.txt
-''' pip install -r requirements.txt '''
+``` pip install -r requirements.txt ```
 
 
 #### Starting the React Frontend
-''' cd frontend '''
-''' npm install ''' # Only for the first time or when dependencies change
-''' npm run dev '''
+``` cd frontend ```
+``` npm install ``` # Only for the first time or when dependencies change
+``` npm run dev ```
 
 
 #### Starting the Django Backend
