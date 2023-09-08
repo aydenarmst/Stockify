@@ -12,16 +12,20 @@ This project leverages the power of Django and React to provide a tool for analy
 #### Prerequisites
 Ensure you have `npm` and `Django` installed to run the frontend and backend respectively.
 
+### Requirements.txt
+''' pip install -r requirements.txt '''
+
+
 #### Starting the React Frontend
-cd frontend
-npm install # Only for the first time or when dependencies change
-npm run dev
+''' cd frontend '''
+''' npm install ''' # Only for the first time or when dependencies change
+''' npm run dev '''
 
 
 #### Starting the Django Backend
+python ./manage.py runserver
 
 ### Data Management
-
 #### Load New Data
 To update or add new ETF holdings data from iShares, simply run the management command:
 ./manage.py download_etf_holdings
