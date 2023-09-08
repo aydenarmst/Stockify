@@ -1,4 +1,4 @@
-# ETF Holdings Overlap Finder
+# Stockify: All in one ETF tool
 
 'Stockify' is built upon the robustness of Django and the flexibility of React, offering an intricate tool dedicated to unraveling the overlaps in ETF holdings. Its design is tailored to:
 
