@@ -1,26 +1,40 @@
 import React, { Component } from "react";
 import { createRoot } from "react-dom/client";
 import Home from "./Home";
-import AddETFPage from "./AddETFPage";
+import AddETFPage from "./Overlap/Overlap";
 import Blend from "./Blend/Blend";
 import NavBar from "./NavBar";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import TermsOfService from "./Terms";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#000000",
+    },
+    secondary: {
+      main: "#ffffff",
+    },
+  },
+});
 
 export default class App extends Component {
   render() {
     return (
-      <Router>
-        <NavBar />
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/blend" element={<Blend />} />
-          <Route path="/addETF" element={<AddETFPage />} />
-        </Routes>
-      </Router>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <NavBar />
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/blend" element={<Blend />} />
+            <Route path="/overlap" element={<AddETFPage />} />
+            <Route path="/terms" element={<TermsOfService />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
     );
   }
 }

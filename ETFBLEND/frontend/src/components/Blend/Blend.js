@@ -92,7 +92,7 @@ function Blend() {
             marginBottom: "2rem",
           }}
         >
-          BLEND
+          Blend
         </Typography>
         <Typography
           style={{
@@ -105,13 +105,13 @@ function Blend() {
             borderRadius: "5px",
           }}
         >
-          Welcome to Blend. This tool not only takes the number of constituent
-          stocks you've selected but also normalizes the holdings to determine
-          the most common stocks among each ETF. By doing this, it provides a
-          comprehensive view of the combined allocations based on the selected
-          ETF's holdings. If you're specifically interested in identifying just
-          the overlapping stocks between ETFs, we recommend heading over to the
-          'Overlap' page.
+          Welcome to Blend, your go-to platform for simplified ETF analysis.
+          Here, each ETF is given equal weight for clarity. With your chosen
+          stocks, Blend identifies common selections across various funds,
+          offering a holistic snapshot of combined allocations. You have the
+          freedom to specify the number of stocks to mirror your chosen funds.
+          If you're keen on exploring intersections between funds, the 'Overlap'
+          section awaits.
         </Typography>
 
         <Divider style={{ marginBottom: "3rem", marginTop: "2rem" }} />

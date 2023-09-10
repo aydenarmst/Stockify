@@ -3,6 +3,7 @@ from .views import index
 
 urlpatterns = [
     path('', index),
-    path('addETF', index),
+    path('overlap', index),
     path('blend', index),
+    path('terms', index),
 ]

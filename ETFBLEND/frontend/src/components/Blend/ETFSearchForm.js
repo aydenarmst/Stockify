@@ -101,7 +101,10 @@ const ETFSearchForm = (props) => {
       </Grid>
 
       <Grid item xs={12} align="center">
-        <Tooltip title="Select the number of top stocks you'd like to use to recreate the ETF(s)" placement="top">
+        <Tooltip
+          title="Select the number of top stocks you'd like to use to recreate the ETF(s)"
+          placement="top"
+        >
           <Typography gutterBottom style={{ cursor: "pointer" }}>
             Max Number of Constituent Stocks
           </Typography>
@@ -114,7 +117,7 @@ const ETFSearchForm = (props) => {
           valueLabelDisplay="auto"
           onChange={handleSliderChange}
           sx={{
-            color: "#003366"
+            color: "#003366",
           }}
         />
       </Grid>
@@ -123,9 +126,14 @@ const ETFSearchForm = (props) => {
         <Button
           variant="contained"
           onClick={handleBlendClick}
-          style={{ backgroundColor: '#003366', color: '#FFFFFF' }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#002244'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#003366'}>
+          style={{ backgroundColor: "#003366", color: "#FFFFFF" }}
+          onMouseOver={(e) =>
+            (e.currentTarget.style.backgroundColor = "#002244")
+          }
+          onMouseOut={(e) =>
+            (e.currentTarget.style.backgroundColor = "#003366")
+          }
+        >
           Blend ETF's
         </Button>
       </Grid>

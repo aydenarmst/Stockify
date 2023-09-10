@@ -101,3 +101,20 @@ class ETFHoldingsView(generics.ListAPIView):
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OverlapView(APIView):
+    def get(self, request, format=None):
+        # Fetching the 'etf' parameters from the request's query parameters
+        etf_tuples = request.query_params.getlist('etf')
+
+        # Splitting each tuple to get the ticker and weight
+        etf_data = [tuple(etf.split(":")) for etf in etf_tuples]
+        
+        # Checking if the tuples are parsed correctly
+        for ticker, weight in etf_data:
+            weight = float(weight)  # Convert weight to float, handle errors if needed
+            # Process each ticker and weight as required
+
+        # Placeholder: return the parsed data as response for now
+        return Response({"etf_data": etf_data})

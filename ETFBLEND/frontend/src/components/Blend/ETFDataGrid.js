@@ -3,25 +3,26 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useState, useEffect } from "react";
 
 function ETFDataGrid({ data }) {
-
-  const [gridHeight, setGridHeight] = useState(window.innerWidth > 1200 ? '600px' : '400px');
+  const [gridHeight, setGridHeight] = useState(
+    window.innerWidth > 1200 ? "600px" : "400px"
+  );
 
   useEffect(() => {
     const handleResize = () => {
-      setGridHeight(window.innerWidth > 1200 ? '600px' : '400px');
+      setGridHeight(window.innerWidth > 1200 ? "600px" : "400px");
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   const columns = [
     { field: "ticker", headerName: "Ticker", width: 150 },
     { field: "name", headerName: "Name", width: 250 },
-    { field: "sector", headerName: "Sector", width: 150},
+    { field: "sector", headerName: "Sector", width: 150 },
     {
       field: "weight",
       headerName: "Weight",
@@ -48,26 +49,8 @@ function ETFDataGrid({ data }) {
         </div>
       ),
     },
-    {
-      field: "price",
-      headerName: "Price",
-      width: 150,
-      renderCell: (params) => (
-        <div>
-          {`$${params.value}`}
-        </div>
-      ),
-    },
-    {
-      field: "etf_count",
-      headerName: "ETF Frequency",
-      width: 150,
-      renderCell: (params) => (
-        <div>
-          {`${params.value}`}
-        </div>
-      ),
-    },
+    { field: "price", headerName: "Price", width: 150},
+    { field: "etf_count", headerName: "ETF Frequency", width: 150},
   ];
 
   return (
