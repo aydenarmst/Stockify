@@ -7,10 +7,11 @@ import {
   Divider,
   Button,
 } from "@mui/material";
-import ETFDataGrid from "../Blend/ETFDataGrid";
+import OverlapDataGrid from "./OverlapDataGrid";
 import SectorExposureChart from "../Blend/SectorExposureChart";
 import BarGraph from "../Blend/BarGraph";
 import ETFSearchFormWeight from "./ETFSearchFormWeight";
+import OverlapDataGrid from "./OverlapDataGrid";
 
 function Overlap() {
   const [holdingsData, setHoldingsData] = useState(null);
@@ -190,7 +191,7 @@ function Overlap() {
 
               {/* ETFDataGrid */}
               <Grid item xs={12}>
-                <ETFDataGrid data={holdingsData} />
+                <OverlapDataGrid data={holdingsData} />
               </Grid>
             </Grid>
           )}

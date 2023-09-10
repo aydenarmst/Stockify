@@ -49,3 +49,9 @@ class BlendedETFSummarySerializer(serializers.Serializer):
     sector_exposure = SectorExposureSerializer(many=True)
     expense_ratio = serializers.DecimalField(max_digits=10, decimal_places=3)
 
+
+class OverlapSerializer(serializers.Serializer):
+    ticker = serializers.CharField()
+    total_weight = serializers.DecimalField(max_digits=15, decimal_places=10)
+    etf_weights = serializers.DictField(child=serializers.DecimalField(max_digits=15, decimal_places=3))
+

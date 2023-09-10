@@ -3,11 +3,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
 from .models import ETFInformation, ETFHolding
-from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer
+from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer, OverlapSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from .business_logic.blend_logic import get_overlapping_holdings
+from .business_logic.overlap_logic import calculate_overlap
 
 
 # Create your views here.
@@ -111,10 +112,10 @@ class OverlapView(APIView):
         # Splitting each tuple to get the ticker and weight
         etf_data = [tuple(etf.split(":")) for etf in etf_tuples]
         
-        # Checking if the tuples are parsed correctly
-        for ticker, weight in etf_data:
-            weight = float(weight)  # Convert weight to float, handle errors if needed
-            # Process each ticker and weight as required
-
+        overlap_percentage = calculate_overlap(etf_data)
+        serializer = OverlapSerializer(data=overlap_percentage, many=True)
         # Placeholder: return the parsed data as response for now
-        return Response({"etf_data": etf_data})
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
