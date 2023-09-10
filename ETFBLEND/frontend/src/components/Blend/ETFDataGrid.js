@@ -49,7 +49,23 @@ function ETFDataGrid({ data }) {
         </div>
       ),
     },
-    { field: "price", headerName: "Price", width: 150},
+    { 
+      field: "price", 
+      headerName: "Price", 
+      width: 150,
+      renderCell: (params) => (
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              textAlign: "center",
+            }}
+          >
+            {`$${params.value}`}
+          </div>
+      ),
+    },
+
     { field: "etf_count", headerName: "ETF Frequency", width: 150},
   ];
 
