@@ -22,4 +22,13 @@ html, body {
     overflow-y: auto;
   }
   
-  
+  .grid-container {
+    width: 100%;
+    height: 400px;
+}
+
+  @media screen and (min-width: 1200px) {
+      .grid-container {
+          height: 600px;
+      }
+  }

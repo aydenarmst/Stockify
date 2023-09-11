@@ -13,26 +13,34 @@ import ETFSearchFormWeight from "./ETFSearchFormWeight";
 import OverlapDataGrid from "./OverlapDataGrid";
 
 function Overlap() {
-  const [holdingsData, setHoldingsData] = useState(null);
-  const [sectorData, setSectorData] = useState(null);
-  const [expenseRatio, setExpenseRatio] = useState(null);
+  const [overlapData, setHoldingsData] = useState(null);
+  const [overlapCount, setOverlapCount] = useState(null);
 
   const handleApiResponse = (data) => {
-    setHoldingsData(data.top_holdings);
-    setSectorData(data.sector_exposure);
-    setExpenseRatio(data.expense_ratio);
+    setHoldingsData(data.overlap_data);
+    setOverlapCount(data.overlap_count);
   };
 
-  const handleExportToCSV = () => {
+  const handleExportToCSVOverlap = () => {
+    console.log("exporting to csv");
+    console.log(overlapData);
     const csvRows = [];
-    const headers = Object.keys(holdingsData[0]);
+
+    // Ensure data[0] and data[0].etf_weights exist before attempting to access keys
+    const headers =
+      overlapData && overlapData[0] && overlapData[0].etf_weights
+        ? ["ticker", ...Object.keys(overlapData[0].etf_weights), "total_weight"]
+        : ["ticker", "total_weight"];
 
     // Add the headers to the CSV
     csvRows.push(headers.join(","));
 
     // Add the rows to the CSV
-    for (const row of holdingsData) {
+    for (const row of overlapData) {
       const values = headers.map((header) => {
+        if (row.etf_weights && header in row.etf_weights) {
+          return `"${row.etf_weights[header].toFixed(2)}%"`;
+        }
         const escaped = ("" + row[header]).replace(/"/g, '\\"');
         return `"${escaped}"`;
       });
@@ -49,7 +57,7 @@ function Overlap() {
 
     // Set the anchorElement's properties
     anchorElement.href = blobUrl;
-    anchorElement.download = "ETF_holdings.csv";
+    anchorElement.download = "ETF_overlap.csv"; // Changed the name for differentiation
 
     // Append to the document
     document.body.appendChild(anchorElement);
@@ -117,7 +125,7 @@ function Overlap() {
         <Grid container spacing={5}>
           <Grid item xs={12} md={6} lg={4}>
             <ETFSearchFormWeight handleApiResponse={handleApiResponse} />
-            {expenseRatio && (
+            {overlapCount && (
               <div
                 style={{
                   border: "1px solid #e1e1e1",
@@ -135,7 +143,7 @@ function Overlap() {
                     margin: "1rem 0",
                   }}
                 >
-                  Blended Expense Ratio: {expenseRatio}%
+                  Number of Overlapping Stocks: {overlapCount}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -144,16 +152,13 @@ function Overlap() {
                     color: "#777",
                   }}
                 >
-                  The blended expense ratio represents the average of the
-                  expense ratios of the selected ETFs, assuming an equal split
-                  among them. It gives an estimate of the total yearly cost if
-                  the holdings were merged into a single ETF.
+                  The Number of overlapping Stocks is the number of stocks across all ETF's selected.
                 </Typography>
               </div>
             )}
           </Grid>
 
-          {holdingsData && (
+          {overlapData && (
             <Grid container item xs={12} md={6} lg={8} alignItems="center">
               {/* Typography Grid */}
               <Grid item xs={8} md={9} lg={10}>
@@ -176,7 +181,7 @@ function Overlap() {
                 <Button
                   variant="outlined"
                   color="primary"
-                  onClick={handleExportToCSV}
+                  onClick={handleExportToCSVOverlap}
                   style={{
                     marginBottom: "1rem",
                     fontFamily: "Poppins, sans-serif",
@@ -190,44 +195,8 @@ function Overlap() {
 
               {/* ETFDataGrid */}
               <Grid item xs={12}>
-                <OverlapDataGrid data={holdingsData} />
+                <OverlapDataGrid data={overlapData} />
               </Grid>
-            </Grid>
-          )}
-
-          {holdingsData && (
-            <Grid item xs={12} md={6} lg={6} align="center">
-              <Typography
-                variant="h5"
-                gutterBottom
-                align="left"
-                style={{
-                  fontFamily: "Poppins, sans-serif",
-                  color: "#333",
-                  marginBottom: "1rem",
-                }}
-              >
-                Holdings by Location
-              </Typography>
-              <BarGraph data={holdingsData} />
-            </Grid>
-          )}
-
-          {sectorData && (
-            <Grid item xs={12} md={6} lg={6} align="center">
-              <Typography
-                variant="h5"
-                gutterBottom
-                align="left"
-                style={{
-                  fontFamily: "Poppins, sans-serif",
-                  color: "#333",
-                  marginBottom: "1rem",
-                }}
-              >
-                Sector Exposure
-              </Typography>
-              <SectorExposureChart data={sectorData} />
             </Grid>
           )}
         </Grid>

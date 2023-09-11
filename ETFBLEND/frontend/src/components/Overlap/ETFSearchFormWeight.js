@@ -6,10 +6,9 @@ import match from "autosuggest-highlight/match";
 import Slider from "@mui/material/Slider";
 import Tooltip from "@mui/material/Tooltip";
 
-const ETFSearchForm = (props) => {
+const ETFSearchFormWeight = (props) => {
   const [etfNameList, setEtfNameList] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [numHoldings, setNumHoldings] = useState(5);
   const [weights, setWeights] = useState({});
 
   useEffect(() => {
@@ -83,7 +82,6 @@ const ETFSearchForm = (props) => {
       .then((response) => response.json())
       .then((data) => {
         props.handleApiResponse(data);
-        console.log(data);
       })
       .catch((error) => console.error("Error fetching ETF overlaps: ", error));
   };
@@ -174,4 +172,4 @@ const ETFSearchForm = (props) => {
   );
 };
 
-export default ETFSearchForm;
+export default ETFSearchFormWeight;

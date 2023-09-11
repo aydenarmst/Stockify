@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
 from .models import ETFInformation, ETFHolding
-from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer, OverlapSerializer
+from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer, OverlapOutputSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -93,8 +93,6 @@ class ETFHoldingsView(generics.ListAPIView):
             'expense_ratio': expense_ratio
         }
 
-        print(summary_data)
-
         # Serialize the data using BlendedETFSummarySerializer
         serializer = BlendedETFSummarySerializer(data=summary_data)
 
@@ -102,6 +100,7 @@ class ETFHoldingsView(generics.ListAPIView):
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class OverlapView(APIView):
@@ -112,9 +111,15 @@ class OverlapView(APIView):
         # Splitting each tuple to get the ticker and weight
         etf_data = [tuple(etf.split(":")) for etf in etf_tuples]
         
-        overlap_percentage = calculate_overlap(etf_data)
-        serializer = OverlapSerializer(data=overlap_percentage, many=True)
-        # Placeholder: return the parsed data as response for now
+        overlap_data, overlap_count = calculate_overlap(etf_data)
+
+        # Constructing the data for the serializer
+        response_data = {
+            "overlap_data": overlap_data,
+            "overlap_count": overlap_count
+        }
+
+        serializer = OverlapOutputSerializer(data=response_data)
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         else:

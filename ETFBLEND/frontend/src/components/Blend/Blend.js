@@ -105,13 +105,12 @@ function Blend() {
             borderRadius: "5px",
           }}
         >
-          Welcome to Blend, your go-to platform for simplified ETF analysis.
-          Here, each ETF is given equal weight for clarity. With your chosen
-          stocks, Blend identifies common selections across various funds,
-          offering a holistic snapshot of combined allocations. You have the
-          freedom to specify the number of stocks to mirror your chosen funds.
-          If you're keen on exploring intersections between funds, the 'Overlap'
-          section awaits.
+          Choose your ETFs and set your preferred maximum stock count. Blend
+          then zeros in on overlapping stocks, adjusting their weights to craft
+          a complete portfolio that adds up to 100%. Non-overlapping assets? We
+          set those aside for a concise view. Curious about the nuances of how
+          different ETFs overlap? Visit our 'Overlap' page. Dive in and uncover
+          tailored insights!
         </Typography>
 
         <Divider style={{ marginBottom: "3rem", marginTop: "2rem" }} />

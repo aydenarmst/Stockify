@@ -5,6 +5,7 @@ import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 import Slider from "@mui/material/Slider";
 import Tooltip from "@mui/material/Tooltip";
+import axios from "axios";
 
 const ETFSearchForm = (props) => {
   const [etfNameList, setEtfNameList] = useState([]);
@@ -12,10 +13,10 @@ const ETFSearchForm = (props) => {
   const [numHoldings, setNumHoldings] = useState(5);
 
   useEffect(() => {
-    fetch("api/etfList")
-      .then((response) => response.json())
-      .then((data) => {
-        setEtfNameList(data);
+    axios
+      .get("api/etfList")
+      .then((response) => {
+        setEtfNameList(response.data);
       })
       .catch((error) => {
         console.error("Error fetching ETF list: ", error);
@@ -53,16 +54,16 @@ const ETFSearchForm = (props) => {
       .map((option) => option.match(/\((.*?)\)/)?.[1] ?? "")
       .filter((ticker) => ticker);
 
-    const queryParameters = [
-      ...ETFTickers.map((ticker) => `etf_tickers=${ticker}`),
-      `number_of_holdings=${numHoldings}`,
-    ].join("&");
+    // Create an instance of URLSearchParams
+    const params = new URLSearchParams();
+    ETFTickers.forEach((ticker) => params.append("etf_tickers", ticker));
+    params.append("number_of_holdings", numHoldings);
 
-    fetch(`/api/etf-holdings/?${queryParameters}`)
-      .then((response) => response.json())
-      .then((data) => {
-        props.handleApiResponse(data);
-        console.log(data);
+    axios
+      .get("/api/etf-holdings/", { params })
+      .then((response) => {
+        props.handleApiResponse(response.data);
+        console.log(response.data);
       })
       .catch((error) => console.error("Error fetching ETF holdings: ", error));
   };

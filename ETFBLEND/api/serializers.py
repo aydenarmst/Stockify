@@ -50,8 +50,11 @@ class BlendedETFSummarySerializer(serializers.Serializer):
     expense_ratio = serializers.DecimalField(max_digits=10, decimal_places=3)
 
 
-class OverlapSerializer(serializers.Serializer):
+class OverlapDataSerializer(serializers.Serializer):
     ticker = serializers.CharField()
     total_weight = serializers.DecimalField(max_digits=15, decimal_places=10)
     etf_weights = serializers.DictField(child=serializers.DecimalField(max_digits=15, decimal_places=3))
 
+class OverlapOutputSerializer(serializers.Serializer):
+    overlap_data = OverlapDataSerializer(many=True)
+    overlap_count = serializers.IntegerField()

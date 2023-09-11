@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import { throttle } from "../throttle";
 
 function OverlapDataGrid({ data }) {
   const [gridHeight, setGridHeight] = useState(
@@ -7,9 +8,9 @@ function OverlapDataGrid({ data }) {
   );
 
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = throttle(() => {
       setGridHeight(window.innerWidth > 1200 ? "600px" : "400px");
-    };
+    }, 250); // throttled to update at most every 250ms
 
     window.addEventListener("resize", handleResize);
 
@@ -22,7 +23,8 @@ function OverlapDataGrid({ data }) {
     field: ticker,
     headerName: `${ticker} Weight`,
     width: 150,
-    valueGetter: (params) => params.row.etf_weights[ticker]?.toFixed(2) + "%" || "",
+    valueGetter: (params) =>
+      params.row.etf_weights[ticker]?.toFixed(2) + "%" || "",
   }));
 
   const columns = [
@@ -32,13 +34,13 @@ function OverlapDataGrid({ data }) {
       field: "total_weight",
       headerName: "Total Weight",
       width: 150,
-      renderCell: (params) => `${params.value.toFixed(2)}%`
+      valueGetter: (params) => params.row.total_weight?.toFixed(2) + "%" || "",
     },
   ];
 
   return (
-    <div style={{ width: "100%" }}>
-      <div style={{ height: gridHeight }}>
+    <div className="grid-container">
+      <div style={{ width: "100%", height: "100%" }}>
         <DataGrid
           rows={data}
           columns={columns}
