@@ -95,6 +95,7 @@ const NavBar = () => {
               color="inherit"
               aria-label="menu"
               onClick={toggleDrawer}
+              style={{ marginLeft: "auto" }}
             >
               <MenuIcon />
             </IconButton>
@@ -129,7 +130,7 @@ const NavBar = () => {
           {[
             { name: "Home", path: "/" },
             { name: "Blend", path: "/blend" },
-            { name: "Adjust Sectors", path: "/addETF" },
+            { name: "Overlap", path: "/overlap" },
             { name: "Terms of service", path: "/terms" },
           ].map((item) => (
             <ListItem

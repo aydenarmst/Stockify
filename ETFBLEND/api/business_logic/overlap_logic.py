@@ -64,11 +64,12 @@ def compute_overlap_count(tickers):
 def calculate_overlap(etf_data):
     etf_weights_dict, tickers = parse_etf_data(etf_data)
     common_holdings = get_common_holdings(tickers)
-    overlap_data = calculate_holding_weights(common_holdings, etf_weights_dict)
-    overlap_data = sort_overlap_data(overlap_data)
-    output_data = format_output_data(overlap_data, tickers)
+    holding_weights = calculate_holding_weights(common_holdings, etf_weights_dict)
+    sorted_holding_weights = sort_overlap_data(holding_weights)
+    output_data = format_output_data(sorted_holding_weights, tickers)
 
     overlap_count = compute_overlap_count(tickers)
     
     return output_data, overlap_count
+
 
