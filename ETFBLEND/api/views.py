@@ -3,13 +3,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
 from .models import ETFInformation, ETFHolding
-from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer, OverlapOutputSerializer
+from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer, OverlapOutputSerializer, MyTokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from .business_logic.blend_logic import get_overlapping_holdings
 from .business_logic.overlap_logic import calculate_overlap
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 # Create your views here.
 
@@ -35,9 +36,7 @@ class CreateETFView(APIView):
         if serializer.is_valid():
             ticker = serializer.data.get('ticker')
             name = serializer.data.get('name')
-            aum = serializer.data.get('AUM')
             expense_ratio = serializer.data.get('expense_ratio')
-            inception_date = serializer.data.get('inception_date')
             lei = serializer.data.get('LEI')
             host = self.request.session.session_key
 
@@ -46,15 +45,12 @@ class CreateETFView(APIView):
                 create = queryset[0]
                 create.ticker = ticker
                 create.name = name
-                create.AUM = aum
                 create.expense_ratio = expense_ratio
-                create.inception_date = inception_date
-                create.LEI = lei
                 create.save(update_fields=[
-                            'ticker', 'name', 'AUM', 'expense_ratio', 'inception_date', 'LEI'])
+                            'ticker', 'name', 'expense_ratio'])
             else:
-                etf = ETFInformation(ticker=ticker, name=name, AUM=aum, expense_ratio=expense_ratio,
-                                     inception_date=inception_date, LEI=lei, host=host)
+                etf = ETFInformation(ticker=ticker, name=name, expense_ratio=expense_ratio,
+                                     LEI=lei, host=host)
                 etf.save()
 
                 return Response(ETFInformationSerializer(etf).data, status=status.HTTP_201_CREATED)
@@ -102,7 +98,6 @@ class ETFHoldingsView(generics.ListAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class OverlapView(APIView):
     def get(self, request, format=None):
         # Fetching the 'etf' parameters from the request's query parameters
@@ -110,13 +105,14 @@ class OverlapView(APIView):
 
         # Splitting each tuple to get the ticker and weight
         etf_data = [tuple(etf.split(":")) for etf in etf_tuples]
-        
-        overlap_data, overlap_count, sector_exposure_dict = calculate_overlap(etf_data)
+
+        overlap_data, overlap_count, sector_exposure_dict = calculate_overlap(
+            etf_data)
 
         # Transform sector exposure into a list of dictionaries suitable for serialization
         sector_exposure_list = [{'sector': k, 'weight': v}
                                 for k, v in sector_exposure_dict.items()]
-        
+
         # Constructing the data for the serializer
         response_data = {
             "overlap_data": overlap_data,
@@ -124,9 +120,21 @@ class OverlapView(APIView):
             "sector_exposure": sector_exposure_list
         }
 
-
         serializer = OverlapOutputSerializer(data=response_data)
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RoutesView(APIView):
+    def get(self, request):
+        routes = [
+            '/api/token',
+            '/api/token/refresh',
+        ]
+        return Response(routes)
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

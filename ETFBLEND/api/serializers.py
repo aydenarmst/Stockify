@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import ETFInformation, ETFHolding
 from decimal import Decimal
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 # ETF information
 class ETFInformationSerializer(serializers.ModelSerializer):
@@ -61,3 +63,15 @@ class OverlapOutputSerializer(serializers.Serializer):
     overlap_count = serializers.IntegerField()
     sector_exposure = SectorExposureSerializer(many=True)
 
+
+
+# Authentication
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+ 
+        # Add custom claims
+        token['username'] = user.username
+ 
+        return token
