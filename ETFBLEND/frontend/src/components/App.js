@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { createRoot } from "react-dom/client";
 import Home from "./Home";
 import AddETFPage from "./Overlap/Overlap";
 import Blend from "./Blend/Blend";
@@ -20,25 +19,22 @@ const theme = createTheme({
   },
 });
 
-export default class App extends Component {
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <NavBar />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/blend" element={<Blend />} />
-            <Route path="/overlap" element={<AddETFPage />} />
-            <Route path="/terms" element={<TermsOfService />} />
-          </Routes>
-        </Router>
-      </ThemeProvider>
-    );
-  }
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/blend" element={<Blend />} />
+          <Route path="/overlap" element={<AddETFPage />} />
+          <Route path="/terms" element={<TermsOfService />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
+  );
 }
 
-const appDiv = document.getElementById("app");
-const root = createRoot(appDiv);
-root.render(<App />);
+export default App;
+
