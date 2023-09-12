@@ -111,13 +111,19 @@ class OverlapView(APIView):
         # Splitting each tuple to get the ticker and weight
         etf_data = [tuple(etf.split(":")) for etf in etf_tuples]
         
-        overlap_data, overlap_count = calculate_overlap(etf_data)
+        overlap_data, overlap_count, sector_exposure_dict = calculate_overlap(etf_data)
 
+        # Transform sector exposure into a list of dictionaries suitable for serialization
+        sector_exposure_list = [{'sector': k, 'weight': v}
+                                for k, v in sector_exposure_dict.items()]
+        
         # Constructing the data for the serializer
         response_data = {
             "overlap_data": overlap_data,
-            "overlap_count": overlap_count
+            "overlap_count": overlap_count,
+            "sector_exposure": sector_exposure_list
         }
+
 
         serializer = OverlapOutputSerializer(data=response_data)
         if serializer.is_valid():

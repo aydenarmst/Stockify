@@ -3,8 +3,7 @@ import { Grid, Typography, Button, TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
-import Slider from "@mui/material/Slider";
-import Tooltip from "@mui/material/Tooltip";
+import axios from "axios";
 
 const ETFSearchFormWeight = (props) => {
   const [etfNameList, setEtfNameList] = useState([]);
@@ -23,6 +22,9 @@ const ETFSearchFormWeight = (props) => {
   }, []);
 
   const handleWeightChange = (ticker, event) => {
+    if (!selectedOptions.some((option) => option.includes(ticker))) {
+      return; // Exit if the ticker is not in the selected options.
+    }
     const newWeight = parseFloat(event.target.value) || 0; // Convert to float or set to 0 if empty or invalid
     const currentTotalWithoutTicker = Object.keys(weights).reduce(
       (sum, key) =>
@@ -55,6 +57,18 @@ const ETFSearchFormWeight = (props) => {
 
   const handleChange = (event, newValue) => {
     if (newValue.length <= 5) {
+      const newSelectedTickers = newValue
+        .map((option) => option.match(/\((.*?)\)/)?.[1])
+        .filter(Boolean);
+      setWeights((prevWeights) => {
+        const updatedWeights = { ...prevWeights };
+        for (let ticker in prevWeights) {
+          if (!newSelectedTickers.includes(ticker)) {
+            delete updatedWeights[ticker];
+          }
+        }
+        return updatedWeights;
+      });
       setSelectedOptions(newValue);
     }
   };
@@ -67,21 +81,20 @@ const ETFSearchFormWeight = (props) => {
 
     const ETFWeights = ETFTickers.map((ticker) => weights[ticker] || 0);
 
-    // Pairing tickers and weights into tuples
     const etfTickerWeightTuples = ETFTickers.map((ticker, index) => [
       ticker,
       ETFWeights[index],
     ]);
 
-    // Prepare query parameters for API request
     const queryParameters = etfTickerWeightTuples
       .map(([ticker, weight]) => `etf=${encodeURIComponent(ticker)}:${weight}`)
       .join("&");
 
-    fetch(`/api/overlap/?${queryParameters}`)
-      .then((response) => response.json())
-      .then((data) => {
-        props.handleApiResponse(data);
+    axios
+      .get(`/api/overlap/?${queryParameters}`)
+      .then((response) => {
+        console.log(response.data)
+        props.handleApiResponse(response.data);
       })
       .catch((error) => console.error("Error fetching ETF overlaps: ", error));
   };

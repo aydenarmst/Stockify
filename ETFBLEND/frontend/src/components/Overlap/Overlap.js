@@ -8,17 +8,21 @@ import {
   Button,
 } from "@mui/material";
 import SectorExposureChart from "../Blend/SectorExposureChart";
-import BarGraph from "../Blend/BarGraph";
 import ETFSearchFormWeight from "./ETFSearchFormWeight";
 import OverlapDataGrid from "./OverlapDataGrid";
+import Alert from "@mui/material/Alert";
 
 function Overlap() {
-  const [overlapData, setHoldingsData] = useState(null);
+  const [overlapData, setHoldingsData] = useState([]);
   const [overlapCount, setOverlapCount] = useState(null);
+  const [sectorData, setSectorData] = useState(null);
+  const [apiResponded, setApiResponded] = useState(false);
 
   const handleApiResponse = (data) => {
     setHoldingsData(data.overlap_data);
     setOverlapCount(data.overlap_count);
+    setSectorData(data.sector_exposure);
+    setApiResponded(true);
   };
 
   const handleExportToCSVOverlap = () => {
@@ -125,7 +129,7 @@ function Overlap() {
         <Grid container spacing={5}>
           <Grid item xs={12} md={6} lg={4}>
             <ETFSearchFormWeight handleApiResponse={handleApiResponse} />
-            {overlapCount && (
+            {apiResponded && overlapCount && overlapData.length > 0 && (
               <div
                 style={{
                   border: "1px solid #e1e1e1",
@@ -152,13 +156,20 @@ function Overlap() {
                     color: "#777",
                   }}
                 >
-                  The Number of overlapping Stocks is the number of stocks across all ETF's selected.
+                  The Number of overlapping Stocks is the number of stocks
+                  across all ETF's selected.
                 </Typography>
               </div>
             )}
           </Grid>
 
-          {overlapData && (
+          {apiResponded && overlapData.length === 0 && (
+            <Alert severity="warning" style={{ marginTop: "2rem" }}>
+              No overlap found.
+            </Alert>
+          )}
+
+          {apiResponded && overlapData.length > 0 && (
             <Grid container item xs={12} md={6} lg={8} alignItems="center">
               {/* Typography Grid */}
               <Grid item xs={8} md={9} lg={10}>
@@ -193,9 +204,23 @@ function Overlap() {
                 </Button>
               </Grid>
 
-              {/* ETFDataGrid */}
               <Grid item xs={12}>
                 <OverlapDataGrid data={overlapData} />
+              </Grid>
+              <Grid item xs={12} md={6} lg={6} align="center">
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  align="left"
+                  style={{
+                    fontFamily: "Poppins, sans-serif",
+                    color: "#333",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  Sector Exposure
+                </Typography>
+                <SectorExposureChart data={sectorData} />
               </Grid>
             </Grid>
           )}

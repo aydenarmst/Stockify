@@ -13,14 +13,16 @@ import SectorExposureChart from "./SectorExposureChart";
 import BarGraph from "./BarGraph";
 
 function Blend() {
-  const [holdingsData, setHoldingsData] = useState(null);
+  const [holdingsData, setHoldingsData] = useState([]);
   const [sectorData, setSectorData] = useState(null);
   const [expenseRatio, setExpenseRatio] = useState(null);
+  const [apiResponded, setApiResponded] = useState(false);
 
   const handleApiResponse = (data) => {
     setHoldingsData(data.top_holdings);
     setSectorData(data.sector_exposure);
     setExpenseRatio(data.expense_ratio);
+    setApiResponded(true);
   };
 
   const handleExportToCSV = () => {
@@ -154,7 +156,13 @@ function Blend() {
             )}
           </Grid>
 
-          {holdingsData && (
+          {apiResponded && holdingsData.length === 0 && (
+            <Alert severity="warning" style={{ marginTop: "2rem" }}>
+              No overlap found.
+            </Alert>
+          )}
+
+          {holdingsData.length > 0 && (
             <Grid container item xs={12} md={6} lg={8} alignItems="center">
               {/* Typography Grid */}
               <Grid item xs={8} md={9} lg={10}>
@@ -196,7 +204,7 @@ function Blend() {
             </Grid>
           )}
 
-          {holdingsData && (
+          {holdingsData.length > 0 && (
             <Grid item xs={12} md={6} lg={6} align="center">
               <Typography
                 variant="h5"

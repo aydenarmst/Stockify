@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { throttle } from "../throttle";
 
+
 function OverlapDataGrid({ data }) {
   const [gridHeight, setGridHeight] = useState(
     window.innerWidth > 1200 ? "600px" : "400px"
@@ -38,6 +39,13 @@ function OverlapDataGrid({ data }) {
     },
   ];
 
+  const getRowClassName = (params) => {
+    const hasAllETFValues = Object.keys(params.row.etf_weights).every(
+      (key) => params.row.etf_weights[key] != "0.00" && params.row.etf_weights[key] !== "0.00"
+    );
+    return hasAllETFValues ? "highlighted-row" : "";
+  };
+
   return (
     <div className="grid-container">
       <div style={{ width: "100%", height: "100%" }}>
@@ -46,6 +54,7 @@ function OverlapDataGrid({ data }) {
           columns={columns}
           getRowId={(row) => row.ticker}
           pageSize={10}
+          getRowClassName={getRowClassName}  // apply the class based on row data
         />
       </div>
     </div>

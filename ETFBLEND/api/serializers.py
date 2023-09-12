@@ -54,7 +54,10 @@ class OverlapDataSerializer(serializers.Serializer):
     ticker = serializers.CharField()
     total_weight = serializers.DecimalField(max_digits=15, decimal_places=10)
     etf_weights = serializers.DictField(child=serializers.DecimalField(max_digits=15, decimal_places=3))
+    sector = serializers.CharField()
 
 class OverlapOutputSerializer(serializers.Serializer):
     overlap_data = OverlapDataSerializer(many=True)
     overlap_count = serializers.IntegerField()
+    sector_exposure = SectorExposureSerializer(many=True)
+
