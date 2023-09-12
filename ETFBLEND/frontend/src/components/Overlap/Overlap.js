@@ -114,15 +114,64 @@ function Overlap() {
             fontFamily: "Lato, sans-serif",
             fontWeight: "700",
             color: "#555",
-            marginBottom: "1.5rem",
+            marginBottom: "1rem",
             border: "1px solid #e1e1e1",
             padding: "1rem",
             borderRadius: "5px",
           }}
         >
-          This tool calculates the overlap between ETFs based on their
-          respective weights. You can explore the aggregated ETF data and even
-          export it for further analysis.
+          Welcome to the ETF Overlap Analyzer! This tool provides insights into
+          how your selected Exchange Traded Funds (ETFs) overlap with each
+          other.
+        </Typography>
+
+        <Typography
+          variant="body1"
+          align="left"
+          style={{
+            fontFamily: "Lato, sans-serif",
+            fontWeight: "700",
+            color: "#555",
+            marginBottom: "1rem",
+          }}
+        >
+          <strong>What does this tool do?</strong>
+        </Typography>
+
+        <ul
+          style={{
+            fontFamily: "Lato, sans-serif",
+            fontWeight: "400",
+            color: "#555",
+            marginLeft: "2rem",
+          }}
+        >
+          <li>
+            <strong>Overlap Detection:</strong> Discovers shared holdings across
+            multiple ETFs you're interested in.
+          </li>
+          <li>
+            <strong>Weighted Analysis:</strong> Calculates the significance of
+            each overlapping stock based on its weight in each ETF.
+          </li>
+          <li>
+            <strong>Sector Insights:</strong> Visualize overlapping investments
+            by sector with our intuitive data chart.
+          </li>
+        </ul>
+
+        <Typography
+          variant="body1"
+          align="left"
+          style={{
+            fontFamily: "Lato, sans-serif",
+            fontWeight: "700",
+            color: "#555",
+            marginTop: "1rem",
+          }}
+        >
+          Understanding overlap is crucial for diversifying your portfolio. Our
+          analyzer helps fine-tune your investment strategy.
         </Typography>
         <Divider style={{ marginBottom: "3rem", marginTop: "2rem" }} />
 

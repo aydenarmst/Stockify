@@ -97,22 +97,71 @@ function Blend() {
           Blend
         </Typography>
         <Typography
+          variant="body1"
+          gutterBottom
+          align="left"
           style={{
             fontFamily: "Lato, sans-serif",
             fontWeight: "700",
             color: "#555",
-            marginBottom: "1.5rem",
+            marginBottom: "1rem",
             border: "1px solid #e1e1e1",
             padding: "1rem",
             borderRadius: "5px",
           }}
         >
-          Choose your ETFs and set your preferred maximum stock count. Blend
-          then zeros in on overlapping stocks, adjusting their weights to craft
-          a complete portfolio that adds up to 100%. Non-overlapping assets? We
-          set those aside for a concise view. Curious about the nuances of how
-          different ETFs overlap? Visit our 'Overlap' page. Dive in and uncover
-          tailored insights!
+          Welcome to the ETF Blend Tool! Craft a harmonized portfolio by
+          blending multiple Exchange Traded Funds (ETFs) into one cohesive mix.
+        </Typography>
+
+        <Typography
+          variant="body1"
+          align="left"
+          style={{
+            fontFamily: "Lato, sans-serif",
+            fontWeight: "700",
+            color: "#555",
+            marginBottom: "1rem",
+          }}
+        >
+          <strong>What does this tool offer?</strong>
+        </Typography>
+
+        <ul
+          style={{
+            fontFamily: "Lato, sans-serif",
+            fontWeight: "400",
+            color: "#555",
+            marginLeft: "2rem",
+          }}
+        >
+          <li>
+            <strong>Even Weight Distribution:</strong> Allocates equal weights
+            to each selected ETF for a balanced exposure.
+          </li>
+          <li>
+            <strong>Normalized Overlaps:</strong> Adjusts overlapping stocks to
+            their fractional contributions, ensuring an unskewed portfolio.
+          </li>
+          <li>
+            <strong>Comprehensive Portfolio View:</strong> Aggregates holdings,
+            sector distribution, and other key metrics into a singular,
+            easy-to-read representation.
+          </li>
+        </ul>
+
+        <Typography
+          variant="body1"
+          align="left"
+          style={{
+            fontFamily: "Lato, sans-serif",
+            fontWeight: "700",
+            color: "#555",
+            marginTop: "1rem",
+          }}
+        >
+          Crafting a unified portfolio is an art. With Blend, make data-driven
+          decisions and refine your investment blueprint effortlessly.
         </Typography>
 
         <Divider style={{ marginBottom: "3rem", marginTop: "2rem" }} />
