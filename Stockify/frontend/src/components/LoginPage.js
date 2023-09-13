@@ -1,6 +1,9 @@
 // LoginPage.jsx
-import React, { useState } from 'react';
+import React, { useState} from 'react';
+import { useContext } from 'react';
 import styled from '@emotion/styled';
+import AuthContext from '../context/AuthContext';
+
 
 const Container = styled.div`
   display: flex;
@@ -48,26 +51,23 @@ const Button = styled.button`
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Do login logic here. For example, make an API call.
-    console.log('Username:', username, 'Password:', password);
-  };
+  let {loginUser} = useContext(AuthContext);
 
   return (
     <Container>
       <FormContainer>
         <Title>Login</Title>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={loginUser}>
           <Input
             type="text"
+            name="username"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <Input
             type="password"
+            name="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

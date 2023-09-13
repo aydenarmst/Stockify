@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   AppBar,
   Toolbar,
@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import AuthContext from "../context/AuthContext";
 
 import logo from "../images/logo.png";
 
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = () => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  let { user, logoutUser } = useContext(AuthContext);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -117,6 +119,17 @@ const NavBar = () => {
             <ListItem component={Link} to="/terms" className={classes.option}>
               Terms of service
             </ListItem>
+
+            {user ? (
+              <ListItem onClick={logoutUser} className={classes.option}>
+                Logout
+              </ListItem>
+            ) : (
+              <ListItem component={Link} to="/login" className={classes.option}>
+                Login
+              </ListItem>
+            )}
+
           </Hidden>
         </Toolbar>
       </AppBar>
