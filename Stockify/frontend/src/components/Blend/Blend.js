@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import ETFSearchForm from "./ETFSearchForm";
+import React, { useState, useContext } from "react";
 import {
   Grid,
   Typography,
@@ -7,17 +6,23 @@ import {
   Container,
   Divider,
   Button,
+  Tooltip,
+  Alert,
 } from "@mui/material";
+import ETFSearchForm from "./ETFSearchForm";
 import ETFDataGrid from "./ETFDataGrid";
 import SectorExposureChart from "./SectorExposureChart";
 import BarGraph from "./BarGraph";
-import Alert from "@mui/material/Alert";
+import AuthContext from "../../context/AuthContext";
+import LockIcon from "@mui/icons-material/Lock";
 
 function Blend() {
   const [holdingsData, setHoldingsData] = useState([]);
   const [sectorData, setSectorData] = useState(null);
   const [expenseRatio, setExpenseRatio] = useState(null);
   const [apiResponded, setApiResponded] = useState(false);
+
+  let { user } = useContext(AuthContext);
 
   const handleApiResponse = (data) => {
     setHoldingsData(data.top_holdings);
@@ -170,7 +175,7 @@ function Blend() {
         <Grid container spacing={5}>
           <Grid item xs={12} md={6} lg={4}>
             <ETFSearchForm handleApiResponse={handleApiResponse} />
-            {expenseRatio && (
+            {holdingsData.length > 0 && expenseRatio && (
               <div
                 style={{
                   border: "1px solid #e1e1e1",
@@ -207,9 +212,16 @@ function Blend() {
           </Grid>
 
           {apiResponded && holdingsData.length === 0 && (
-            <Alert severity="warning" style={{ marginTop: "2rem" }}>
-              No overlap found.
-            </Alert>
+                <Alert
+                  severity="warning"
+                  style={{
+                    marginTop: "2rem",
+                    backgroundColor: "#ffe4e4", // Set the desired background color
+                    width: "100%", // Make the Alert fill the entire width of the container
+                  }}
+                >
+                  No overlap found.
+                </Alert>
           )}
 
           {holdingsData.length > 0 && (
@@ -232,19 +244,48 @@ function Blend() {
 
               {/* Button Grid */}
               <Grid item xs={4} md={3} lg={2} align="right">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleExportToCSV}
-                  style={{
-                    marginBottom: "1rem",
-                    fontFamily: "Poppins, sans-serif",
-                    color: "#30B700",
-                    borderColor: "#30B700",
-                  }}
-                >
-                  Export to CSV
-                </Button>
+                {user ? (
+                  // If the user is logged in, show the export button
+                  <Tooltip title="Export to CSV">
+                    <span>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleExportToCSV}
+                        style={{
+                          marginBottom: "1rem",
+                          fontFamily: "Poppins, sans-serif",
+                          color: "#30B700",
+                          borderColor: "#30B700",
+                        }}
+                      >
+                        Export to CSV
+                      </Button>
+                    </span>
+                  </Tooltip>
+                ) : (
+                  // If the user is not logged in, show a disabled button with a tooltip
+                  <Tooltip title="You must be logged in to export to CSV">
+                    <span>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        disabled={!user}
+                        style={{
+                          marginBottom: "1rem",
+                          fontFamily: "Poppins, sans-serif",
+                          color: "#30B700",
+                          borderColor: "#30B700",
+                          display: "flex", // Display the content as a flex container
+                          alignItems: "center", // Center the content vertically
+                        }}
+                      >
+                        <LockIcon style={{ marginRight: "0.5rem" }} /> Export to
+                        CSV
+                      </Button>
+                    </span>
+                  </Tooltip>
+                )}
               </Grid>
 
               {/* ETFDataGrid */}
@@ -272,7 +313,7 @@ function Blend() {
             </Grid>
           )}
 
-          {sectorData && (
+          {holdingsData.length > 0 && sectorData && (
             <Grid item xs={12} md={6} lg={6} align="center">
               <Typography
                 variant="h5"

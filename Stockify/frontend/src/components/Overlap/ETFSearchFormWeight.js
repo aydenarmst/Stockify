@@ -11,7 +11,7 @@ const ETFSearchFormWeight = (props) => {
   const [weights, setWeights] = useState({});
 
   useEffect(() => {
-    fetch("api/etfList")
+    fetch("http://127.0.0.1:8000/api/etfList")
       .then((response) => response.json())
       .then((data) => {
         setEtfNameList(data);
@@ -91,7 +91,7 @@ const ETFSearchFormWeight = (props) => {
       .join("&");
 
     axios
-      .get(`/api/overlap/?${queryParameters}`)
+      .get(`http://127.0.0.1:8000/api/overlap/?${queryParameters}`)
       .then((response) => {
         console.log(response.data)
         props.handleApiResponse(response.data);

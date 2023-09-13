@@ -5,6 +5,7 @@ from django.db.models import Count, Sum
 from collections import defaultdict
 from django.db.models import Sum, F
 from decimal import Decimal
+from django.contrib.auth.models import AbstractUser
 
 
 # ETF information
@@ -38,3 +39,10 @@ class ETFHolding(models.Model):
     currency = models.CharField(max_length=100)
     fx_rate = models.CharField(max_length=100)
     maturity = models.CharField(max_length=100)
+
+
+# class CustomUser(AbstractUser):
+#     pass
+
+#     def __str__(self):
+#         return self.username

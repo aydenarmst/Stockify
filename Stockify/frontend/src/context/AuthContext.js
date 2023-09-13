@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
       ? jwt_decode(localStorage.getItem("authTokens"))
       : null
   );
+  let [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -52,17 +53,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   let updateToken = async () => {
-    console.log('Update Token called')
     let response = await fetch("http://127.0.0.1:8000/api/token/refresh/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        refresh: authTokens.refresh,
-      }),
+      body: JSON.stringify({ refresh: authTokens?.refresh }),
     });
+
     let data = await response.json();
+
     if (response.status === 200) {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
@@ -70,21 +70,24 @@ export const AuthProvider = ({ children }) => {
     } else {
       logoutUser();
     }
+    if (loading) {
+      setLoading(false);
+    }
   };
 
   // every 4 minutes
   useEffect(() => {
     let interval = setInterval(() => {
-        if(authTokens){
-            updateToken();
-        }
-    }, 240000)
+      if (authTokens) {
+        updateToken();
+      }
+    }, 240000);
     return () => clearInterval(interval);
-    }, [authTokens]);
-
+  }, [authTokens, loading]);
 
   let contextData = {
     user: user,
+    authTokens: authTokens,
     loginUser: loginUser,
     logoutUser: logoutUser,
   };
