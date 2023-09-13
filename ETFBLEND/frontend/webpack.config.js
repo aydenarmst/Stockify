@@ -1,11 +1,20 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
 module.exports = {
+  mode: process.env.NODE_ENV || "development",
   entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, "./static/frontend"),
+    path: path.resolve(__dirname, "./dist"),
     filename: "[name].js",
+    publicPath: "/",
+  },
+  devServer: {
+    static: path.join(__dirname, "public"),
+    compress: true,
+    port: 3000,
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -20,12 +29,17 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: '[path][name].[ext]',
+              name: "[name].[ext]",
+              outputPath: "static/images/", // Adjust the output path if needed
             },
           },
         ],
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
@@ -33,11 +47,18 @@ module.exports = {
     minimize: true,
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+    }),
     new webpack.DefinePlugin({
       "process.env": {
-        // This has effect on the react lib size
-        NODE_ENV: JSON.stringify("development"),
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV || "development"),
       },
     }),
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react')
+    }
+  }
 };

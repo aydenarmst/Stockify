@@ -4,6 +4,8 @@ import AddETFPage from "./Overlap/Overlap";
 import Blend from "./Blend/Blend";
 import NavBar from "./NavBar";
 import TermsOfService from "./Terms";
+import LoginPage from "./LoginPage";
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
@@ -30,6 +32,7 @@ function App() {
           <Route path="/blend" element={<Blend />} />
           <Route path="/overlap" element={<AddETFPage />} />
           <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

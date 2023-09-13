@@ -11,19 +11,13 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-import logo from "../../static/images/8.png";
+import logo from "../images/logo.png";
 
 const useStyles = makeStyles((theme) => ({
-  logo: {
-    width: "30px",
-    height: "30px",
-    marginRight: "10px",
-  },
   toolbar: {
     [theme.breakpoints.up("md")]: {
       display: "flex", // Display options in a row for larger screens
@@ -80,7 +74,15 @@ const NavBar = () => {
     <>
       <AppBar position="sticky" style={{ backgroundColor: "black" }}>
         <Toolbar className={classes.toolbar}>
-          <img src={logo} alt="Logo" className={classes.logo} />
+          <img
+            src={logo}
+            alt="Logo"
+            style={{
+              width: "30px",
+              height: "30px",
+              marginRight: "10px",
+            }}
+          />
           <Link to="/" style={{ textDecoration: "none", color: "white" }}>
             <Typography
               variant="h6"
@@ -102,7 +104,11 @@ const NavBar = () => {
           </Hidden>
           <Hidden smDown>
             {/* Navigation options for larger screens */}
-            <ListItem component={Link} to="/blend" className={classes.firstOption}>
+            <ListItem
+              component={Link}
+              to="/blend"
+              className={classes.firstOption}
+            >
               Blend
             </ListItem>
             <ListItem component={Link} to="/overlap" className={classes.option}>
