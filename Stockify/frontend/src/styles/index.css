@@ -1,0 +1,39 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #FF512F, #F09819);
+  }
+  
+  #main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+  
+  #app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+  
+  .grid-container {
+    width: 100%;
+    height: 400px;
+}
+
+  @media screen and (min-width: 1200px) {
+      .grid-container {
+          height: 600px;
+      }
+  }
+
+  /* Assuming you have a styles.css or similar */
+.highlighted-row {
+  background-color: #e0f7fa !important; /* You can choose any light color for highlighting */
+}
