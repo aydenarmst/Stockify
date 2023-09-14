@@ -74,7 +74,13 @@ const NavBar = () => {
 
   return (
     <>
-      <AppBar position="sticky" style={{ backgroundColor: "black" }}>
+      <AppBar
+        position="sticky"
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.8)", // This makes it 80% opaque.
+          boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)", // This adds a subtle shadow
+        }}
+      >
         <Toolbar className={classes.toolbar}>
           <img
             src={logo}
@@ -129,7 +135,6 @@ const NavBar = () => {
                 Login
               </ListItem>
             )}
-
           </Hidden>
         </Toolbar>
       </AppBar>
