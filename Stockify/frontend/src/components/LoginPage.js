@@ -1,22 +1,19 @@
-// LoginPage.jsx
-import React, { useState} from 'react';
-import { useContext } from 'react';
-import styled from '@emotion/styled';
-import AuthContext from '../context/AuthContext';
-
+import React, { useState, useContext } from "react";
+import styled from "@emotion/styled";
+import AuthContext from "../context/AuthContext";
 
 const Container = styled.div`
   display: flex;
   height: 100vh;
   justify-content: center;
   align-items: center;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
 `;
 
 const FormContainer = styled.div`
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   width: 300px;
 `;
@@ -28,10 +25,14 @@ const Title = styled.h2`
 
 const Input = styled.input`
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.7rem 1rem;
   margin-bottom: 1rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  border-radius: 6px;
+  border: none;
+  background-color: #f7f7f7;
+  &:focus {
+    outline-color: #007bff;
+  }
 `;
 
 const Button = styled.button`
@@ -42,6 +43,7 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #0056b3;
@@ -49,9 +51,9 @@ const Button = styled.button`
 `;
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  let {loginUser} = useContext(AuthContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { loginUser } = useContext(AuthContext);
 
   return (
     <Container>

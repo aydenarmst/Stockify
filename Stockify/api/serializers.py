@@ -3,6 +3,7 @@ from .models import ETFInformation, ETFHolding
 from decimal import Decimal
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 # ETF information
 class ETFInformationSerializer(serializers.ModelSerializer):
@@ -75,3 +76,15 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
  
         return token
+    
+# class CustomUserCreationForm(UserCreationForm):
+
+#     class Meta:
+#         model = CustomUser
+#         fields = ("username", "email")
+
+# class CustomUserChangeForm(UserChangeForm):
+
+#     class Meta:
+#         model = CustomUser
+#         fields = ("username", "email")

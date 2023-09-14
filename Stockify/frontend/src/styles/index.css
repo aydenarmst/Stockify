@@ -2,7 +2,6 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to right, #FF512F, #F09819);
   }
   
   #main {
@@ -36,4 +35,8 @@ html, body {
   /* Assuming you have a styles.css or similar */
 .highlighted-row {
   background-color: #e0f7fa !important; /* You can choose any light color for highlighting */
+}
+
+.particles{
+  z-index: -2;
 }
