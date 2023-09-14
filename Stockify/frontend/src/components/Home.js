@@ -21,7 +21,6 @@ function HomePage() {
             gutterBottom
             align={isSmallScreen ? "center" : "left"}
             fontFamily={"Montserrat, sans-serif"}
-            color={"white"}
           >
             Stockify: Your ETF Analysis Powerhouse
           </Typography>
@@ -36,7 +35,6 @@ function HomePage() {
             style={{ maxWidth: isSmallScreen ? "90vw" : "600px" }}
             fontFamily={"Lato, sans-serif"}
             fontWeight={700}
-            color={"white"}
           >
             Dive deep into ETF holdings with a tool built on the strength of Django
             and the dynamism of React. Stockify bridges the gap in the market,

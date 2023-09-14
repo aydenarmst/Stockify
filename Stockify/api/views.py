@@ -11,8 +11,6 @@ from .business_logic.blend_logic import get_overlapping_holdings
 from .business_logic.overlap_logic import calculate_overlap
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
