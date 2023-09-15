@@ -5,3 +5,4 @@ _pycache__/
 node_modules/
 build/
 .vscode/
+db.sqlite3
