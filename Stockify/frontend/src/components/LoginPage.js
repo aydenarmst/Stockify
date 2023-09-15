@@ -1,6 +1,6 @@
-import React, { useState} from 'react';
-import { useNavigate } from 'react-router-dom';
-import{
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
   Avatar,
   Button,
   CssBaseline,
@@ -11,130 +11,156 @@ import{
   Grid,
   Typography,
   Container,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import axiosInstance from '../axios';
-
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import axiosInstance from "../axios";
 
 const useStyles = makeStyles((theme) => ({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function SignIn() {
-	const navigate = useNavigate();
-	const initialFormData = Object.freeze({
-		email: '',
-		password: '',
-	});
+  const navigate = useNavigate();
+  const initialFormData = Object.freeze({
+    email: "",
+    password: "",
+  });
 
-	const [formData, updateFormData] = useState(initialFormData);
+  const [formData, updateFormData] = useState(initialFormData);
 
-	const handleChange = (e) => {
-		updateFormData({
-			...formData,
-			[e.target.name]: e.target.value.trim(),
-		});
-	};
+  const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+      [e.target.name]: e.target.value.trim(),
+    });
+  };
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		console.log(formData);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
 
-		axiosInstance
-			.post(`token/`, {
-				email: formData.email,
-				password: formData.password,
-			})
-			.then((res) => {
-				localStorage.setItem('access_token', res.data.access);
-				localStorage.setItem('refresh_token', res.data.refresh);
-				axiosInstance.defaults.headers['Authorization'] =
-					'JWT ' + localStorage.getItem('access_token');
-				navigate('/');
-				console.log(res);
-				console.log(res.data);
-			});
-	};
+    axiosInstance
+      .post(`token/`, {
+        email: formData.email,
+        password: formData.password,
+      })
+      .then((res) => {
+        localStorage.setItem("access_token", res.data.access);
+        localStorage.setItem("refresh_token", res.data.refresh);
+        axiosInstance.defaults.headers["Authorization"] =
+          "JWT " + localStorage.getItem("access_token");
+        navigate("/");
+        console.log(res);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        // General error
+        console.error("Error during login:", error);
 
-	const classes = useStyles();
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
 
-	return (
-		<Container component="main" maxWidth="xs">
-			<CssBaseline />
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}></Avatar>
-				<Typography component="h1" variant="h5">
-					Sign in
-				</Typography>
-				<form className={classes.form} noValidate>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						id="email"
-						label="Email Address"
-						name="email"
-						autoComplete="email"
-						autoFocus
-						onChange={handleChange}
-					/>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						name="password"
-						label="Password"
-						type="password"
-						id="password"
-						autoComplete="current-password"
-						onChange={handleChange}
-					/>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
-						label="Remember me"
-					/>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						className={classes.submit}
-						onClick={handleSubmit}
-					>
-						Sign In
-					</Button>
-					<Grid container>
-						<Grid item xs>
-							<Link href="#" variant="body2">
-								Forgot password?
-							</Link>
-						</Grid>
-						<Grid item>
-							<Link href="#" variant="body2">
-								{"Don't have an account? Sign Up"}
-							</Link>
-						</Grid>
-					</Grid>
-				</form>
-			</div>
-		</Container>
+          // Check for a 400 status code and provide a friendly error message
+          if (error.response.status === 400) {
+            alert(
+              "The provided email address or password is invalid. Please check and try again."
+            );
+          } else {
+            // Some other error occurred
+            alert("Something went wrong. Please try again.");
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          alert(
+            "Server did not respond. Please check your connection and try again."
+          );
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          alert("Unable to process your request. Please try again later.");
+        }
+      });
+  };
+
+  const classes = useStyles();
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}></Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <form className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={handleChange}
+          />
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmit}
+          >
+            Sign In
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="./Register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Container>
   );
 }

@@ -85,8 +85,8 @@ def format_response(response_json):
 
 def download_and_save_etf_holdings():
     etf_data = read_etf_data_from_csv('data/ishares-etf-index.csv')
-    start_date = '2023-08-30'
-    end_date = datetime.now().strftime('2023-08-30')
+    start_date = '2023-09-13'
+    end_date = datetime.now().strftime('2023-09-13')
 
     for etf in etf_data:
         etf_information, _ = ETFInformation.objects.get_or_create(

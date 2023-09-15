@@ -82,20 +82,22 @@ const HomePage = () => {
           <CardMedia
             component="img"
             alt={`${card.title} Image`}
-            height="400"
+            height="300"
+            width={"100%"}
             image={card.img}
             title={card.title}
+            style={{ objectFit: "contain" }}
           />
           <CardContent
             style={{
               paddingTop: "16px",
               paddingBottom: "32px",
-              height: "200px",
+              height: "150px",
             }}
           >
             <Typography
               gutterBottom
-              variant="h5"
+              variant="h3"
               component="div"
               fontFamily={"Montserrat, serif-sans"}
             >
@@ -142,7 +144,6 @@ const HomePage = () => {
               gutterBottom
               align={alignText}
               fontFamily={"Lato, sans-serif"}
-              fontWeight={700}
               style={{
                 lineHeight: "1.6", // increased line height
                 letterSpacing: "0.5px", // slight increase in letter spacing

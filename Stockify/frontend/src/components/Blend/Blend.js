@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -20,7 +20,16 @@ function Blend() {
   const [sectorData, setSectorData] = useState(null);
   const [expenseRatio, setExpenseRatio] = useState(null);
   const [apiResponded, setApiResponded] = useState(false);
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      setUser(true);
+    } else {
+      setUser(false);
+    }
+  }, []);
 
   const handleApiResponse = (data) => {
     setHoldingsData(data.top_holdings);
@@ -210,16 +219,16 @@ function Blend() {
           </Grid>
 
           {apiResponded && holdingsData.length === 0 && (
-                <Alert
-                  severity="warning"
-                  style={{
-                    marginTop: "2rem",
-                    backgroundColor: "#ffe4e4", // Set the desired background color
-                    width: "100%", // Make the Alert fill the entire width of the container
-                  }}
-                >
-                  No overlap found.
-                </Alert>
+            <Alert
+              severity="warning"
+              style={{
+                marginTop: "2rem",
+                backgroundColor: "#ffe4e4", // Set the desired background color
+                width: "100%", // Make the Alert fill the entire width of the container
+              }}
+            >
+              No overlap found.
+            </Alert>
           )}
 
           {holdingsData.length > 0 && (
@@ -240,10 +249,8 @@ function Blend() {
                 </Typography>
               </Grid>
 
-              {/* Button Grid
               <Grid item xs={4} md={3} lg={2} align="right">
                 {user ? (
-                  // If the user is logged in, show the export button
                   <Tooltip title="Export to CSV">
                     <span>
                       <Button
@@ -262,7 +269,6 @@ function Blend() {
                     </span>
                   </Tooltip>
                 ) : (
-                  // If the user is not logged in, show a disabled button with a tooltip
                   <Tooltip title="You must be logged in to export to CSV">
                     <span>
                       <Button
@@ -284,7 +290,7 @@ function Blend() {
                     </span>
                   </Tooltip>
                 )}
-              </Grid> */}
+              </Grid>
 
               {/* ETFDataGrid */}
               <Grid item xs={12}>

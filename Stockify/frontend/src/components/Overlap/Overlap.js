@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -21,6 +21,7 @@ function Overlap() {
   const [overlapCount, setOverlapCount] = useState(null);
   const [sectorData, setSectorData] = useState(null);
   const [apiResponded, setApiResponded] = useState(false);
+  const [user, setUser] = useState(null);
 
   const handleApiResponse = (data) => {
     setHoldingsData(data.overlap_data);
@@ -28,6 +29,15 @@ function Overlap() {
     setSectorData(data.sector_exposure);
     setApiResponded(true);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      setUser(true);
+    } else {
+      setUser(false);
+    }
+  }, []);
 
   const handleExportToCSVOverlap = () => {
     console.log("exporting to csv");
@@ -247,7 +257,6 @@ function Overlap() {
                 </Typography>
               </Grid>
 
-              {/* Button Grid
               <Grid item xs={4} md={3} lg={2} align="right">
                 {user ? (
                   // If the user is logged in, show the export button
@@ -291,7 +300,7 @@ function Overlap() {
                     </span>
                   </Tooltip>
                 )}
-              </Grid> */}
+              </Grid>
 
               <Grid item xs={12}>
                 <OverlapDataGrid data={overlapData} />

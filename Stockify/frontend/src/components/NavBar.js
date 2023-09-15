@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import AccountDropdown from "./AccountDropdown";
 
 import logo from "../images/logo.png";
 
@@ -123,16 +124,7 @@ const NavBar = () => {
             <ListItem component={Link} to="/terms" className={classes.option}>
               Terms of service
             </ListItem>
-
-            {/* {user ? (
-              <ListItem onClick={logoutUser} className={classes.option}>
-                Logout
-              </ListItem>
-            ) : (
-              <ListItem component={Link} to="/login" className={classes.option}>
-                Login
-              </ListItem>
-            )} */}
+            <AccountDropdown />
           </Hidden>
         </Toolbar>
       </AppBar>
