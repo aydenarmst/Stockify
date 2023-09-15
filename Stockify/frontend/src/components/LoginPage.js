@@ -36,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
   const initialFormData = Object.freeze({
     email: "",
@@ -79,12 +81,15 @@ export default function SignIn() {
 
           // Check for a 400 status code and provide a friendly error message
           if (error.response.status === 400) {
-            alert(
-              "The provided email address or password is invalid. Please check and try again."
-            );
+            setError("Invalid credentials. Please try again.");
+          } else if (error.response.status === 401) {
+            // Check for a 401 status code and provide a friendly error message
+            setError("Invalid Credentials");
+
           } else {
             // Some other error occurred
             alert("Something went wrong. Please try again.");
+            setError("Something went wrong. Please try again.");
           }
         } else if (error.request) {
           // The request was made but no response was received
@@ -147,6 +152,7 @@ export default function SignIn() {
           >
             Sign In
           </Button>
+          {error && <p className="error">{error}</p>}
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

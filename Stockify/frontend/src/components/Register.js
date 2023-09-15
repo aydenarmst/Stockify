@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const initialFormData = Object.freeze({
     email: "",
@@ -56,7 +57,6 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
     axiosInstance
       .post(`user/register/`, {
@@ -64,11 +64,42 @@ export default function SignUp() {
         user_name: formData.username,
         password: formData.password,
       })
-      .then((res) => {
+      .then(() => {
         navigate("/login");
-        console.log(res);
-        console.log(res.data);
-      });
+      })
+      .catch(handleRegistrationError);
+  };
+
+  const handleRegistrationError = (error) => {
+    const GENERIC_ERROR = "Something went wrong. Please try again.";
+    const SERVER_UNRESPONSIVE =
+      "Server did not respond. Please check your connection and try again.";
+
+    if (error.response) {
+      switch (error.response.status) {
+        case 400:
+          // Assuming 'detail' is a common error key in the response
+          if (error.response.data.detail) {
+            setError(error.response.data.detail);
+          } else {
+            // If there are other specific error fields in the response, handle them here
+            const errorMsg = Object.values(error.response.data).join(" "); // This will join all error messages into a single string
+            setError(errorMsg || INVALID_CREDENTIALS);
+          }
+          break;
+        case 401:
+          setError("Invalid Credentials");
+          break;
+        default:
+          alert(GENERIC_ERROR);
+          setError(GENERIC_ERROR);
+          break;
+      }
+    } else if (error.request) {
+      alert(SERVER_UNRESPONSIVE);
+    } else {
+      alert(GENERIC_ERROR);
+    }
   };
 
   const classes = useStyles();
@@ -123,7 +154,7 @@ export default function SignUp() {
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+                label="I want to receive new updates to Stockify, we wont spam you!"
               />
             </Grid>
           </Grid>
@@ -137,6 +168,7 @@ export default function SignUp() {
           >
             Sign Up
           </Button>
+          {error && <Typography color="error">{error}</Typography>}
           <Grid container justify="flex-end">
             <Grid item>
               <Link onClick={() => navigate("/login")} variant="body2">

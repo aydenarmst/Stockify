@@ -1,37 +1,57 @@
-import React from 'react';
-import { ListItem, ListItemText, Menu, MenuItem } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { ListItem, ListItemText, Menu, MenuItem } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function AccountDropdown() {
-    const Navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState(null);
+  const Navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [user, setUser] = React.useState(null);
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      setUser(true);
+    } else {
+      setUser(false);
+    }
+  }, []);
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    return (
-        <div>
-            <ListItem button onClick={handleClick}>
-                <ListItemText primary="Account" />
-            </ListItem>
-            <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={() => Navigate('/login')}>Login</MenuItem>
-                <MenuItem onClick={() => Navigate('/logout')}>Logout</MenuItem>
-                <MenuItem onClick={() => Navigate('/register')}>Register</MenuItem>
-            </Menu>
-        </div>
-    );
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <ListItem button onClick={handleClick}>
+        <ListItemText primary="Account" />
+      </ListItem>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {user ? (
+          <MenuItem onClick={() => Navigate("/logout")}>Logout</MenuItem>
+        ) : (
+          [
+            <MenuItem key="login" onClick={() => Navigate("/login")}>
+              Login
+            </MenuItem>,
+            <MenuItem key="register" onClick={() => Navigate("/register")}>
+              Register
+            </MenuItem>,
+          ]
+        )}
+      </Menu>
+    </div>
+  );
 }
 
 export default AccountDropdown;
