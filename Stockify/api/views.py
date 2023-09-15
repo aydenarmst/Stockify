@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics, status
 from .models import ETFInformation, ETFHolding
-from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer, OverlapOutputSerializer, MyTokenObtainPairSerializer
+from .serializers import ETFInformationSerializer, CreateETFSerializer, ETFHoldingsSerializer, BlendedETFSummarySerializer, OverlapOutputSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -125,16 +125,3 @@ class OverlapView(APIView):
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class RoutesView(APIView):
-    def get(self, request):
-        routes = [
-            '/api/token',
-            '/api/token/refresh',
-        ]
-        return Response(routes)
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer

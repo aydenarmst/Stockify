@@ -13,7 +13,6 @@ import ETFSearchForm from "./ETFSearchForm";
 import ETFDataGrid from "./ETFDataGrid";
 import SectorExposureChart from "./SectorExposureChart";
 import BarGraph from "./BarGraph";
-import AuthContext from "../../context/AuthContext";
 import LockIcon from "@mui/icons-material/Lock";
 
 function Blend() {
@@ -22,7 +21,6 @@ function Blend() {
   const [expenseRatio, setExpenseRatio] = useState(null);
   const [apiResponded, setApiResponded] = useState(false);
 
-  let { user } = useContext(AuthContext);
 
   const handleApiResponse = (data) => {
     setHoldingsData(data.top_holdings);
@@ -242,7 +240,7 @@ function Blend() {
                 </Typography>
               </Grid>
 
-              {/* Button Grid */}
+              {/* Button Grid
               <Grid item xs={4} md={3} lg={2} align="right">
                 {user ? (
                   // If the user is logged in, show the export button
@@ -286,7 +284,7 @@ function Blend() {
                     </span>
                   </Tooltip>
                 )}
-              </Grid>
+              </Grid> */}
 
               {/* ETFDataGrid */}
               <Grid item xs={12}>

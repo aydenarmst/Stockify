@@ -1,9 +1,21 @@
 html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to right, #FF512F, #F09819);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #FF512F, #F09819, #FE2D6C) no-repeat;
+  background-size: 200% 100%; /* 2 times the width, 1 times the height */
+  animation: moveBackground 10s infinite alternate; /* Adjust the 30s for speed */
+}
+
+@keyframes moveBackground {
+  0% {
+      background-position: 100% 0; /* starting position */
   }
+  100% {
+      background-position: 0% 0; /* end position */
+  }
+}
+
   
   #main {
     position: relative;

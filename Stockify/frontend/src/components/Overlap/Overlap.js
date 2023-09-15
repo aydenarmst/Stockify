@@ -13,7 +13,6 @@ import SectorExposureChart from "../Blend/SectorExposureChart";
 import ETFSearchFormWeight from "./ETFSearchFormWeight";
 import OverlapDataGrid from "./OverlapDataGrid";
 import { useContext } from "react";
-import AuthContext from "../../context/AuthContext";
 
 import LockIcon from "@mui/icons-material/Lock";
 
@@ -22,7 +21,6 @@ function Overlap() {
   const [overlapCount, setOverlapCount] = useState(null);
   const [sectorData, setSectorData] = useState(null);
   const [apiResponded, setApiResponded] = useState(false);
-  let { user } = useContext(AuthContext);
 
   const handleApiResponse = (data) => {
     setHoldingsData(data.overlap_data);
@@ -249,7 +247,7 @@ function Overlap() {
                 </Typography>
               </Grid>
 
-              {/* Button Grid */}
+              {/* Button Grid
               <Grid item xs={4} md={3} lg={2} align="right">
                 {user ? (
                   // If the user is logged in, show the export button
@@ -293,7 +291,7 @@ function Overlap() {
                     </span>
                   </Tooltip>
                 )}
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <OverlapDataGrid data={overlapData} />

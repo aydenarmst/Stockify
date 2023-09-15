@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { AuthProvider } from "../context/AuthContext";
 
 import Home from "./Home";
 import AddETFPage from "./Overlap/Overlap";
@@ -9,6 +8,8 @@ import Blend from "./Blend/Blend";
 import NavBar from "./NavBar";
 import TermsOfService from "./Terms";
 import LoginPage from "./LoginPage";
+import SignUp from "./Register";
+import Logout from "./Logout";
 
 const theme = createTheme({
   palette: {
@@ -26,16 +27,16 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <AuthProvider>
           <NavBar />
           <Routes>
             <Route exact path="/" element={<Home />} />
+            <Route path="/register" element={<SignUp />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/blend" element={<Blend />} />
             <Route path="/overlap" element={<AddETFPage />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
-        </AuthProvider>
       </Router>
     </ThemeProvider>
   );

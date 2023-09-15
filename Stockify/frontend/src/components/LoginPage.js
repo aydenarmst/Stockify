@@ -1,82 +1,140 @@
-// LoginPage.jsx
 import React, { useState} from 'react';
-import { useContext } from 'react';
-import styled from '@emotion/styled';
-import AuthContext from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import{
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  Grid,
+  Typography,
+  Container,
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import axiosInstance from '../axios';
 
 
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  background-color: #f2f2f2;
-`;
+const useStyles = makeStyles((theme) => ({
+	paper: {
+		marginTop: theme.spacing(8),
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+	},
+	avatar: {
+		margin: theme.spacing(1),
+		backgroundColor: theme.palette.secondary.main,
+	},
+	form: {
+		width: '100%', // Fix IE 11 issue.
+		marginTop: theme.spacing(1),
+	},
+	submit: {
+		margin: theme.spacing(3, 0, 2),
+	},
+}));
 
-const FormContainer = styled.div`
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  width: 300px;
-`;
+export default function SignIn() {
+	const navigate = useNavigate();
+	const initialFormData = Object.freeze({
+		email: '',
+		password: '',
+	});
 
-const Title = styled.h2`
-  text-align: center;
-  margin-bottom: 1rem;
-`;
+	const [formData, updateFormData] = useState(initialFormData);
 
-const Input = styled.input`
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-`;
+	const handleChange = (e) => {
+		updateFormData({
+			...formData,
+			[e.target.name]: e.target.value.trim(),
+		});
+	};
 
-const Button = styled.button`
-  width: 100%;
-  padding: 0.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log(formData);
 
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
+		axiosInstance
+			.post(`token/`, {
+				email: formData.email,
+				password: formData.password,
+			})
+			.then((res) => {
+				localStorage.setItem('access_token', res.data.access);
+				localStorage.setItem('refresh_token', res.data.refresh);
+				axiosInstance.defaults.headers['Authorization'] =
+					'JWT ' + localStorage.getItem('access_token');
+				navigate('/');
+				console.log(res);
+				console.log(res.data);
+			});
+	};
 
-const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  let {loginUser} = useContext(AuthContext);
+	const classes = useStyles();
 
-  return (
-    <Container>
-      <FormContainer>
-        <Title>Login</Title>
-        <form onSubmit={loginUser}>
-          <Input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button type="submit">Login</Button>
-        </form>
-      </FormContainer>
-    </Container>
+	return (
+		<Container component="main" maxWidth="xs">
+			<CssBaseline />
+			<div className={classes.paper}>
+				<Avatar className={classes.avatar}></Avatar>
+				<Typography component="h1" variant="h5">
+					Sign in
+				</Typography>
+				<form className={classes.form} noValidate>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="email"
+						label="Email Address"
+						name="email"
+						autoComplete="email"
+						autoFocus
+						onChange={handleChange}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="password"
+						label="Password"
+						type="password"
+						id="password"
+						autoComplete="current-password"
+						onChange={handleChange}
+					/>
+					<FormControlLabel
+						control={<Checkbox value="remember" color="primary" />}
+						label="Remember me"
+					/>
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit}
+						onClick={handleSubmit}
+					>
+						Sign In
+					</Button>
+					<Grid container>
+						<Grid item xs>
+							<Link href="#" variant="body2">
+								Forgot password?
+							</Link>
+						</Grid>
+						<Grid item>
+							<Link href="#" variant="body2">
+								{"Don't have an account? Sign Up"}
+							</Link>
+						</Grid>
+					</Grid>
+				</form>
+			</div>
+		</Container>
   );
-};
-
-export default LoginPage;
+}

@@ -97,7 +97,7 @@ const HomePage = () => {
               gutterBottom
               variant="h5"
               component="div"
-              fontFamily={"Space Grotesk, serif-sans"}
+              fontFamily={"Montserrat, serif-sans"}
             >
               {card.title}
             </Typography>
@@ -106,6 +106,7 @@ const HomePage = () => {
               color="textSecondary"
               component="p"
               style={{ color: "whitesmoke" }}
+              fontFamily={"Lato, sans-serif"}
             >
               {card.desc}
             </Typography>
@@ -178,7 +179,7 @@ const HomePage = () => {
                 size="large"
                 fullWidth={isSmallScreen}
                 sx={SignUpButton}
-                href="/signup"
+                href="/register"
               >
                 Sign Up
               </Button>
