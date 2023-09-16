@@ -9,6 +9,21 @@ const ETFSearchFormWeight = (props) => {
   const [etfNameList, setEtfNameList] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [weights, setWeights] = useState({});
+  const [excludedSectors, setExcludedSectors] = useState([]);
+
+  const SECTORS = [
+    "Energy",
+    "Health Care",
+    "Information Technology",
+    "Communication Services",
+    "Consumer Discretionary",
+    "Utilities",
+    "Financials",
+    "Materials",
+    "Real Estate",
+    "Consumer Staples",
+    "Industrials",
+  ];
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/etfList")
@@ -93,7 +108,7 @@ const ETFSearchFormWeight = (props) => {
     axios
       .get(`http://127.0.0.1:8000/api/overlap/?${queryParameters}`)
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         props.handleApiResponse(response.data);
       })
       .catch((error) => console.error("Error fetching ETF overlaps: ", error));
@@ -164,6 +179,17 @@ const ETFSearchFormWeight = (props) => {
             </div>
           );
         })}
+      </Grid>
+      <Grid item xs={12} align="center">
+        <Autocomplete
+          multiple
+          options={SECTORS}
+          value={excludedSectors}
+          onChange={(event, newValue) => setExcludedSectors(newValue)}
+          renderInput={(params) => (
+            <TextField {...params} label="Exclude Sectors" margin="normal" />
+          )}
+        />
       </Grid>
 
       <Grid item xs={12} align="center">
