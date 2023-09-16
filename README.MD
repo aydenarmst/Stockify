@@ -27,7 +27,7 @@ Ensure you have `npm` and `Django` installed to run the frontend and backend res
 #### Starting the React Frontend
 ``` cd frontend ```
 ``` npm install ``` # Only for the first time or when dependencies change
-``` npm start ```
+``` npm run dev ```
 
 
 #### Starting the Django Backend
