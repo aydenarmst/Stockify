@@ -89,7 +89,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ETFBLEND.urls'
+ROOT_URLCONF = 'Stockify.urls'
 
 TEMPLATES = [
     {
@@ -107,7 +107,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ETFBLEND.wsgi.application'
+WSGI_APPLICATION = 'Stockify.wsgi.application'
 
 
 # Database
