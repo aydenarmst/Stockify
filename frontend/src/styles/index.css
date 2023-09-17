@@ -44,6 +44,11 @@ html, body {
           height: 600px;
       }
   }
+  @media screen and (min-width: 1600px) {
+      .grid-container {
+          height: 800px;
+      }
+  }
 
   /* Assuming you have a styles.css or similar */
 .highlighted-row {

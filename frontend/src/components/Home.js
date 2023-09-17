@@ -203,6 +203,58 @@ const HomePage = () => {
           )}
         </Grid>
       </Grid>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        style={{
+          padding: "4rem 0",
+          borderTop: "1px solid #ddd",
+          backgroundColor: "#f5f5f5",
+        }}
+      >
+        {[
+          { label: "Terms of Service", href: "/Terms" },
+          { label: "GitHub", href: "https://github.com/aydenarmst" },
+          { label: "LinkedIn", href: "www.linkedin.com/in/ayden-armstrong" },
+        ].map((link) => (
+          <Grid
+            item
+            xs={12}
+            md={4}
+            key={link.label}
+            style={{ textAlign: "center", margin: "0.5rem 0" }}
+          >
+            <a
+              href={link.href}
+              target={link.href.startsWith("http") ? "_blank" : undefined}
+              rel={
+                link.href.startsWith("http") ? "noopener noreferrer" : undefined
+              }
+              style={{
+                textDecoration: "none",
+                color: "#333",
+                padding: "5px 10px",
+                borderRadius: "4px",
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = "#e7e7e7";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "transparent";
+              }}
+            >
+              {link.label}
+            </a>
+          </Grid>
+        ))}
+        <Grid item xs={12} style={{ textAlign: "center", marginTop: "2rem" }}>
+          <Typography variant="body2" style={{ color: "#666" }}>
+            Made by <strong>Ayden Armstrong</strong>
+          </Typography>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

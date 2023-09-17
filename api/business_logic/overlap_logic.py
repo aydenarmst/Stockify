@@ -11,21 +11,31 @@ def parse_etf_data(etf_data):
     return etf_weights, tickers
 
 
-def get_common_holdings(tickers):
+def get_common_holdings(tickers, exclude_holdings=[]):
     ETF_list = ETFInformation.objects.filter(ticker__in=tickers)
-    duplicate_tickers = [ticker for ticker, _ in _get_duplicate_tickers_with_counts(ETF_list)]
-    return ETFHolding.objects.filter(etf__in=ETF_list, ticker__in=duplicate_tickers).values('ticker', 'etf__ticker', 'weight', 'sector')
+    duplicate_tickers = [ticker for ticker,
+                         _ in _get_duplicate_tickers_with_counts(ETF_list)]
+
+    return ETFHolding.objects.filter(
+        etf__in=ETF_list,
+        ticker__in=duplicate_tickers
+    ).exclude(
+        sector__in=exclude_holdings  # Exclude stocks from the specified sectors
+    ).values('ticker', 'etf__ticker', 'weight', 'sector')
 
 
 def calculate_holding_weights(common_holdings, etf_weights_dict):
-    overlap_data = defaultdict(lambda: {"total_weight": Decimal(0), "etf_weights": {}, "overlap_count": 0, "sector": ""})
+    overlap_data = defaultdict(lambda: {"total_weight": Decimal(
+        0), "etf_weights": {}, "overlap_count": 0, "sector": ""})
 
     for holding in common_holdings:
-        adjusted_weight = (Decimal(holding['weight']) * Decimal(etf_weights_dict[holding['etf__ticker']])).quantize(Decimal('0.000'), rounding=ROUND_DOWN)
+        adjusted_weight = (Decimal(holding['weight']) * Decimal(
+            etf_weights_dict[holding['etf__ticker']])).quantize(Decimal('0.000'), rounding=ROUND_DOWN)
 
         ticker_info = overlap_data[holding['ticker']]
         ticker_info["total_weight"] += adjusted_weight
-        ticker_info["etf_weights"][holding['etf__ticker']] = Decimal(holding['weight']).quantize(Decimal('0.000'), rounding=ROUND_DOWN)
+        ticker_info["etf_weights"][holding['etf__ticker']] = Decimal(
+            holding['weight']).quantize(Decimal('0.000'), rounding=ROUND_DOWN)
         ticker_info["sector"] = holding['sector']
 
     return overlap_data
@@ -46,17 +56,19 @@ def format_output_data(overlap_data, tickers):
 
 
 def compute_overlap_count(tickers):
-    holdings_per_etf = [set(ETFHolding.objects.filter(etf__ticker=ticker).values_list('ticker', flat=True)) for ticker in tickers]
+    holdings_per_etf = [set(ETFHolding.objects.filter(
+        etf__ticker=ticker).values_list('ticker', flat=True)) for ticker in tickers]
     return len(set.intersection(*holdings_per_etf))
 
 
-def calculate_overlap(etf_data):
+def calculate_overlap(etf_data, exclude_holdings=[]):
     etf_weights, tickers = parse_etf_data(etf_data)
-    common_holdings = get_common_holdings(tickers)
+    common_holdings = get_common_holdings(tickers, exclude_holdings)
     holding_weights = calculate_holding_weights(common_holdings, etf_weights)
     sorted_weights = sort_overlap_data(holding_weights)
     output_data = format_output_data(sorted_weights, tickers)
 
-    normalized_holdings = [{'ticker': data['ticker'], 'weight': data['total_weight'], 'sector': data['sector']} for data in output_data]
+    normalized_holdings = [{'ticker': data['ticker'], 'weight': data['total_weight'],
+                            'sector': data['sector']} for data in output_data]
 
     return output_data, compute_overlap_count(tickers), get_sector_exposure(normalized_holdings)

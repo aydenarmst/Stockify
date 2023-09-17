@@ -106,8 +106,10 @@ class OverlapView(APIView):
         # Splitting each tuple to get the ticker and weight
         etf_data = [tuple(etf.split(":")) for etf in etf_tuples]
 
+        exclude_holdings = request.query_params.getlist('exclude')
+
         overlap_data, overlap_count, sector_exposure_dict = calculate_overlap(
-            etf_data)
+            etf_data, exclude_holdings)
 
         # Transform sector exposure into a list of dictionaries suitable for serialization
         sector_exposure_list = [{'sector': k, 'weight': v}
