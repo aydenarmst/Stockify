@@ -12,59 +12,52 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccountDropdown from "./AccountDropdown";
 
 import logo from "../images/logo.png";
 
-const useStyles = makeStyles((theme) => ({
-  toolbar: {
-    [theme.breakpoints.up("md")]: {
-      display: "flex", // Display options in a row for larger screens
-      justifyContent: "space-between", // Position items to the left and right
-    },
-  },
-  option: {
-    color: "white",
-    [theme.breakpoints.down("sm")]: {
-      display: "none", // Hide options for smaller screens
-    },
-    marginLeft: theme.spacing(1), // Add spacing between options
-    marginRight: theme.spacing(1), // Add spacing between options
-    "&:hover": {
-      textDecoration: "underline",
-      textDecorationColor: "white",
-    },
-  },
-  firstOption: {
-    color: "white",
-    [theme.breakpoints.down("sm")]: {
-      display: "none", // Hide options for smaller screens
-    },
-    marginLeft: theme.spacing(25), // Add spacing between options
-    "&:hover": {
-      textDecoration: "underline",
-      textDecorationColor: "white",
-    },
-  },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-start",
-  },
-  drawerItem: {
-    padding: theme.spacing(2),
-    fontFamily: "Poppins, sans-serif",
-    textDecoration: "none",
-    color: "black",
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 }));
 
+const StyledOption = styled(ListItem)(({ theme }) => ({
+  color: 'white',
+  marginLeft: theme.spacing(1),
+  marginRight: theme.spacing(1),
+  '&:hover': {
+    textDecoration: 'underline',
+    textDecorationColor: 'white',
+  },
+  [theme.breakpoints.down('sm')]: {
+    display: 'none',
+  },
+}));
+
+const StyledFirstOption = styled(StyledOption)(({ theme }) => ({
+  marginLeft: theme.spacing(25),
+}));
+
+const StyledDrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(0, 1),
+  ...theme.mixins.toolbar,
+  justifyContent: 'flex-start',
+}));
+
+const StyledDrawerItem = styled(ListItem)({
+  padding: '16px',
+  fontFamily: 'Poppins, sans-serif',
+  textDecoration: 'none',
+  color: 'black',
+});
+
 const NavBar = () => {
-  const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -80,7 +73,7 @@ const NavBar = () => {
           boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)", // This adds a subtle shadow
         }}
       >
-        <Toolbar className={classes.toolbar}>
+        <StyledToolbar>
           <img
             src={logo}
             alt="Logo"
@@ -111,22 +104,21 @@ const NavBar = () => {
           </Hidden>
           <Hidden smDown>
             {/* Navigation options for larger screens */}
-            <ListItem
+            <StyledFirstOption
               component={Link}
               to="/blend"
-              className={classes.firstOption}
             >
               Blend
-            </ListItem>
-            <ListItem component={Link} to="/overlap" className={classes.option}>
+            </StyledFirstOption>
+            <StyledOption component={Link} to="/overlap">
               Overlap
-            </ListItem>
-            <ListItem component={Link} to="/terms" className={classes.option}>
+            </StyledOption>
+            <StyledOption component={Link} to="/terms">
               Terms of service
-            </ListItem>
+            </StyledOption>
             <AccountDropdown />
           </Hidden>
-        </Toolbar>
+        </StyledToolbar>
       </AppBar>
 
       <Drawer
@@ -135,11 +127,11 @@ const NavBar = () => {
         onClose={toggleDrawer}
         transitionDuration={500} // Add smooth transition
       >
-        <div className={classes.drawerHeader}>
+        <StyledDrawerHeader>
           <IconButton onClick={toggleDrawer}>
             <ChevronRightIcon />
           </IconButton>
-        </div>
+        </StyledDrawerHeader>
         <List>
           {[
             { name: "Home", path: "/" },
@@ -147,16 +139,15 @@ const NavBar = () => {
             { name: "Overlap", path: "/overlap" },
             { name: "Terms of service", path: "/terms" },
           ].map((item) => (
-            <ListItem
+            <StyledDrawerItem
               button
               key={item.name}
               component={Link}
               to={item.path}
               onClick={toggleDrawer}
-              className={classes.drawerItem}
             >
               {item.name}
-            </ListItem>
+            </StyledDrawerItem>
           ))}
         </List>
       </Drawer>

@@ -12,28 +12,31 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import axiosInstance from "../axios";
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+const PaperStyled = styled("div")(({ theme }) => ({
+  marginTop: theme.spacing(8),
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 }));
+
+const AvatarStyled = styled(Avatar)(({ theme }) => ({
+  margin: theme.spacing(1),
+  backgroundColor: theme.palette.secondary.main,
+}));
+
+const FormStyled = styled("form")(({ theme }) => ({
+  width: "100%", // Fix IE 11 issue.
+  marginTop: theme.spacing(1),
+}));
+
+const SubmitStyled = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(3, 0, 2),
+}));
+
+// Use the above styled components in your React components as required
 
 export default function SignIn() {
   const [error, setError] = useState(null);
@@ -85,7 +88,6 @@ export default function SignIn() {
           } else if (error.response.status === 401) {
             // Check for a 401 status code and provide a friendly error message
             setError("Invalid Credentials");
-
           } else {
             // Some other error occurred
             alert("Something went wrong. Please try again.");
@@ -103,17 +105,15 @@ export default function SignIn() {
       });
   };
 
-  const classes = useStyles();
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}></Avatar>
+      <PaperStyled>
+        <AvatarStyled></AvatarStyled>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <FormStyled noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -142,16 +142,15 @@ export default function SignIn() {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
+          <SubmitStyled
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
             onClick={handleSubmit}
           >
             Sign In
-          </Button>
+          </SubmitStyled>
           {error && <p className="error">{error}</p>}
           <Grid container>
             <Grid item xs>
@@ -165,8 +164,8 @@ export default function SignIn() {
               </Link>
             </Grid>
           </Grid>
-        </form>
-      </div>
+        </FormStyled>
+      </PaperStyled>
     </Container>
   );
 }
