@@ -91,6 +91,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CSRF_COOKIE_SECURE = True
+
 ROOT_URLCONF = 'Stockify.urls'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')

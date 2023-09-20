@@ -20,6 +20,7 @@ const ETFSearchFormWeight = (props) => {
   const [weights, setWeights] = useState({});
   const [excludedSectors, setExcludedSectors] = useState([]);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const apiEndpoint = process.env.API_ENDPOINT || "http://fuck"
 
   const SECTORS = [
     "Energy",
@@ -37,7 +38,7 @@ const ETFSearchFormWeight = (props) => {
   ];
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/etfList")
+    fetch(`${apiEndpoint}/api/etfList`)
       .then((response) => response.json())
       .then((data) => {
         setEtfNameList(data);
@@ -142,7 +143,7 @@ const ETFSearchFormWeight = (props) => {
     const queryParameters = `${etfQueryString}&${excludedSectorsQueryString}`;
 
     axios
-      .get(`http://127.0.0.1:8000/api/overlap/?${queryParameters}`)
+      .get(`${apiEndpoint}/api/overlap/?${queryParameters}`)
       .then((response) => {
         console.log(response.data);
         props.handleApiResponse(response.data);
