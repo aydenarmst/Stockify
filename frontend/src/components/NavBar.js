@@ -86,7 +86,7 @@ const NavBar = () => {
           <Link to="/" style={{ textDecoration: "none", color: "white" }}>
             <Typography
               variant="h6"
-              style={{ fontFamily: "Montserrat, sans-serif" }}
+              style={{ fontFamily: 'Montserrat, sans-serif' }}
             >
               Stockify
             </Typography>
