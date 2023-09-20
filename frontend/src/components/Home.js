@@ -146,10 +146,10 @@ const HomePage = () => {
               align={alignText}
               fontFamily={"Lato, sans-serif"}
               style={{
-                lineHeight: "1.6", // increased line height
-                letterSpacing: "0.5px", // slight increase in letter spacing
+                lineHeight: "1.6",
+                letterSpacing: "0.5px",
                 textShadow: "1px 1px 2px rgba(0,0,0,0.1)", // subtle shadow for better legibility
-                color: "#000000", // making sure text is pure black for contrast
+                color: "#000000",
               }}
             >
               Dive deep into ETF holdings with a tool built on the strength of
