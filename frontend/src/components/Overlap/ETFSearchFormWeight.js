@@ -53,7 +53,7 @@ const ETFSearchFormWeight = (props) => {
       typeof newValue === "string" ? parseFloat(newValue) : newValue;
 
     if (!selectedOptions.some((option) => option.includes(ticker))) {
-      return; // Exit if the ticker is not in the selected options.
+      return;
     }
 
     const currentTotalWithoutTicker = Object.keys(weights).reduce(
