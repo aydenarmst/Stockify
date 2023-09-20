@@ -20,7 +20,7 @@ const ETFSearchFormWeight = (props) => {
   const [weights, setWeights] = useState({});
   const [excludedSectors, setExcludedSectors] = useState([]);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const apiEndpoint = process.env.API_ENDPOINT || "http://fuck"
+  const apiEndpoint = process.env.API_ENDPOINT || "http://fuck";
 
   const SECTORS = [
     "Energy",
@@ -34,7 +34,7 @@ const ETFSearchFormWeight = (props) => {
     "Real Estate",
     "Consumer Staples",
     "Industrials",
-    "Cash and/or Derivatives"
+    "Cash and/or Derivatives",
   ];
 
   useEffect(() => {
