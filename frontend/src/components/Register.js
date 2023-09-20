@@ -84,7 +84,6 @@ export default function SignUp() {
           if (error.response.data.detail) {
             setError(error.response.data.detail);
           } else {
-            // If there are other specific error fields in the response, handle them here
             const errorMsg = Object.values(error.response.data).join(" "); // This will join all error messages into a single string
             setError(errorMsg || INVALID_CREDENTIALS);
           }
