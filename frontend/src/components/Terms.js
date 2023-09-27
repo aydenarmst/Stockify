@@ -6,9 +6,12 @@ const TermsOfService = () => {
         <Box style={{ 
             display: 'flex', 
             flexDirection: 'column',
-            minHeight: '100vh',
-            backgroundColor: 'white' 
+            flexGrow: 1,
+            backgroundColor: 'white',
+            position: 'relative', 
+            zIndex: 1 
         }}>
+        
             <Container maxWidth="lg" style={{ marginTop: '2em', marginBottom: '2em', padding: '0' }}>
                 <Typography variant="h3" gutterBottom style={{ borderBottom: '1px solid #ddd', paddingBottom: '0.5em' }}>
                     Terms of Service

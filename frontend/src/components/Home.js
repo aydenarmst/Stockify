@@ -15,6 +15,7 @@ import {
 import blend from "../images/blend.png";
 import overlap from "../images/overlap.png";
 import sourceCode from "../images/sourceCode.png";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const theme = useTheme();
@@ -71,14 +72,14 @@ const HomePage = () => {
         style={{
           maxHeight: "500px",
           maxWidth: "400px",
-          backgroundColor: "#444", // Slightly lighter color
+          backgroundColor: "#444",
           color: card.color,
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", // Subtle shadow
-          border: "1px solid rgba(255, 255, 255, 0.1)", // Subtle border
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
           marginBottom: "2rem",
         }}
       >
-        <CardActionArea href={href}>
+        <CardActionArea component={Link} to={href}>
           <CardMedia
             component="img"
             alt={`${card.title} Image`}
@@ -99,7 +100,7 @@ const HomePage = () => {
               gutterBottom
               variant="h3"
               component="div"
-              fontFamily={"Montserrat, serif-sans"}
+              fontFamily={"Montserrat, sans-serif"}
             >
               {card.title}
             </Typography>
@@ -145,10 +146,10 @@ const HomePage = () => {
               align={alignText}
               fontFamily={"Lato, sans-serif"}
               style={{
-                lineHeight: "1.6", // increased line height
-                letterSpacing: "0.5px", // slight increase in letter spacing
+                lineHeight: "1.6",
+                letterSpacing: "0.5px",
                 textShadow: "1px 1px 2px rgba(0,0,0,0.1)", // subtle shadow for better legibility
-                color: "#000000", // making sure text is pure black for contrast
+                color: "#000000",
               }}
             >
               Dive deep into ETF holdings with a tool built on the strength of
@@ -169,7 +170,8 @@ const HomePage = () => {
                 size="large"
                 fullWidth={isSmallScreen}
                 sx={LoginButton}
-                href="/login"
+                component={Link}
+                to="/login"
               >
                 Login
               </Button>
@@ -180,13 +182,15 @@ const HomePage = () => {
                 size="large"
                 fullWidth={isSmallScreen}
                 sx={SignUpButton}
-                href="/register"
+                component={Link}
+                to="/register"
               >
                 Sign Up
               </Button>
             </Grid>
           </Grid>
         </Box>
+
         <Grid
           marginTop={"10rem"}
           marginX={"0rem"}
@@ -198,9 +202,15 @@ const HomePage = () => {
           align="center"
           style={{ backgroundColor: "#000" }}
         >
-          {cards.map((card) =>
-            renderCard(card, `/${card.title.toLowerCase()}`)
-          )}
+          {cards.map((card) => {
+            let href;
+            if (card.title === "Source Code") {
+              href = "https://github.com/aydenarmst/Stockify";
+            } else {
+              href = `/${card.title.toLowerCase()}`;
+            }
+            return renderCard(card, href);
+          })}
         </Grid>
       </Grid>
       <Grid
@@ -217,7 +227,10 @@ const HomePage = () => {
         {[
           { label: "Terms of Service", href: "/Terms" },
           { label: "GitHub", href: "https://github.com/aydenarmst" },
-          { label: "LinkedIn", href: "www.linkedin.com/in/ayden-armstrong" },
+          {
+            label: "LinkedIn",
+            href: "https://www.linkedin.com/in/ayden-armstrong",
+          },
         ].map((link) => (
           <Grid
             item
@@ -226,27 +239,45 @@ const HomePage = () => {
             key={link.label}
             style={{ textAlign: "center", margin: "0.5rem 0" }}
           >
-            <a
-              href={link.href}
-              target={link.href.startsWith("http") ? "_blank" : undefined}
-              rel={
-                link.href.startsWith("http") ? "noopener noreferrer" : undefined
-              }
-              style={{
-                textDecoration: "none",
-                color: "#333",
-                padding: "5px 10px",
-                borderRadius: "4px",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = "#e7e7e7";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = "transparent";
-              }}
-            >
-              {link.label}
-            </a>
+            {link.href.startsWith("http") ? (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: "none",
+                  color: "#333",
+                  padding: "5px 10px",
+                  borderRadius: "4px",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = "#e7e7e7";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "transparent";
+                }}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                to={link.href}
+                style={{
+                  textDecoration: "none",
+                  color: "#333",
+                  padding: "5px 10px",
+                  borderRadius: "4px",
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = "#e7e7e7";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = "transparent";
+                }}
+              >
+                {link.label}
+              </Link>
+            )}
           </Grid>
         ))}
         <Grid item xs={12} style={{ textAlign: "center", marginTop: "2rem" }}>

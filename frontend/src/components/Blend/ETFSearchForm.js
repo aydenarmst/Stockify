@@ -12,9 +12,11 @@ const ETFSearchForm = (props) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [numHoldings, setNumHoldings] = useState(5);
 
+  const apiEndpoint = process.env.API_ENDPOINT || "http://fuck"
+
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/etfList")
+      .get(`${apiEndpoint}/api/etfList`)
       .then((response) => {
         setEtfNameList(response.data);
       })
@@ -60,7 +62,7 @@ const ETFSearchForm = (props) => {
     params.append("number_of_holdings", numHoldings);
 
     axios
-      .get("http://127.0.0.1:8000/api/etf-holdings/", { params })
+      .get(`${apiEndpoint}/api/etf-holdings/`, { params })
       .then((response) => {
         props.handleApiResponse(response.data);
         console.log(response.data);
