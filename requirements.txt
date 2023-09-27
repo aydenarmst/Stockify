@@ -1,9 +1,8 @@
-Django==4.2.4
-django-decouple
-djangorestframework
-django-cors-headers
-django-cors-headers==4.2.0
-djangorestframework==3.14.0
-djangorestframework-simplejwt==5.3.0
 beautifulsoup4==4.11.1
-bs4==0.0.1
+Django==4.2.4
+djangorestframework==3.14.0
+djangorestframework_simplejwt==5.3.0
+pandas==1.4.2
+pandas_market_calendars==4.3.1
+python-decouple==3.8
+Requests==2.31.0
