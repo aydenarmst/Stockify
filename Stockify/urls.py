@@ -22,10 +22,11 @@ from rest_framework_simplejwt.views import (
 )
 from accounts.views import CustomTokenObtainPairView
 from django.views.generic import TemplateView
+from api.views import ETFInformationView, ETFHoldingsView, CreateETFView, ETFTickerList
 
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="index.html"), name="index"),
+    path('', ETFInformationView.as_view(), name='etf-information'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('api/user/', include('accounts.urls', namespace='accounts')),
