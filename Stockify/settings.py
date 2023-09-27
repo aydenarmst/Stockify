@@ -169,7 +169,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "stockify-env-2.eba-ywy3xmeu.us-west-2.elasticbeanstalk.com",
 ]
 
 AUTH_USER_MODEL = "accounts.NewUser"
