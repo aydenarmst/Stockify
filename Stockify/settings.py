@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'please change me to something secret'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['stockify-env-2.eba-ywy3xmeu.us-west-2.elasticbeanstalk.com']
 
 
 
@@ -95,10 +95,6 @@ CSRF_COOKIE_SECURE = True
 
 ROOT_URLCONF = 'Stockify.urls'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
-
-STATICFILES_DIRS = os.path.join(BASE_DIR, 'frontend/dist/static'),
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -164,6 +160,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
