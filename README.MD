@@ -37,15 +37,3 @@ Ensure you have `npm` and `Django` installed to run the frontend and backend res
 #### Load New Data
 To update or add new ETF holdings data from iShares, simply run the management command:
 ``` python manage.py download_etf_holdings ```
-
-
-### Documentation
-
-We believe in empowering our users with detailed documentation. Please refer to our [Wiki](LINK-TO-YOUR-WIKI-IF-YOU-HAVE-ONE) or the `docs` directory for more extensive guidance and tutorials.
-
-### Contribution
-
-We welcome contributions from the community! If you'd like to contribute, please check our [Contributing Guide](LINK-TO-YOUR-CONTRIBUTING-GUIDE-IF-YOU-HAVE-ONE) and [Code of Conduct](LINK-TO-YOUR-CODE-OF-CONDUCT-IF-YOU-HAVE-ONE).
-
-### License
-[Your chosen License, e.g., MIT]
